@@ -27,7 +27,7 @@ public class BoardDAO {
 	// 2. web.xml 기존에 있는 거 한글 인코딩 이 프로젝트의 web.xml에 복붙하기
 	// 3. root-context.xml 기존에 있는 거 이 프로젝트의 root-context.xml에 복붙하기
 	
-	
+	 
 	// 컨트롤러와 DAO를 나누어진 이유 : 분업을 하기위해
 	// DAO는 DB와 직접적으로 연결해주기 위한 기능을함
 	// 그 DB와 연결해주는 걸 mybatis로 위임해서 할거임

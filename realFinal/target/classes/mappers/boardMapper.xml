@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="boardDAO">
+   	<!-- MAPPER 파일은 SQL문장을 관리하는 파일이다
+   		namespace : 맵퍼파일끼리 구분하는 이름/ 다른 Mapper파일과 이름이 중복되어서는 안된다
+   	 	<select> <insert> <update> <delete> 등 쿼리문에 대한 태그가 존재
+   	 	태그들에게 id를 부여하여 외부에서 호출할 때 "맵퍼이름.id" 로 탐색
+   	 	<select id="">
+   	 	매퍼에 쓰는 쿼리문은 실제 디벨로퍼에서도 실행이되어야한다. 안그러면 에러난다
+   	 -->
+
+   	 <!-- DAO파일의 mybatis.selectList("rentDAO.getMovieList", 여기) 이문장의 여기에 쓸 데이터가 있으면 매퍼에도 아래 타입을 지정해줘야한다
+   		 parameterType="" : 쿼리문장을 실행할 때 외부로부터 받은 필요한 데이터
+   	 	  resultType=""   : 쿼리문장을 실행할 때 출력되는 결과데이터
+   	 	  파일 경로를 넣어야하는데 길면 mybatis-config 에서 지정해주는 것
+   	  -->
+   	    
+   	  <!-- 글 저장 -->
+	<select id="savePost" parameterType="board" > 
+  		INSERT INTO write_KnowBoard (SEQ, R_SEQ, TITLE, WRITER, CONTENT, POSTINGDATE, SUBJECT, PICTURE, HITS , STATE)
+  		VALUES ( TB_KNOWBOARD_SEQ.NEXTVAL , 0, #{title}, 'writer', #{content}, sysdate, #{subject}, 'picture', 0, 'Y' )
+	</select>  
+
+	<!-- 글 상세 불러오기 -->
+	<select id="getPost" parameterType="board" resultType="board">
+  		SELECT * FROM write_KnowBoard
+ 		WHERE title = #{title}
+	</select>
+	
+	<!-- 글 삭제 -->
+	<select id="deletePost" parameterType="board" resultType="board">
+  		UPDATE write_KnowBoard
+ 			SET STATE = 'N'
+ 		WHERE SEQ = #{seq}
+	</select>
+	
+	<!-- 글 수정 -->
+		<select id="modifyPost" parameterType="modifyboard" resultType="modifyboard" > 
+  		INSERT INTO  mod_KnowBoard ( CNT , SEQ, R_SEQ, R_TITLE, R_CONTENT, R_REPOSTINGTDATE, R_SUBJECT, R_PICTURE )
+  			<choose>
+				<when test='R_SEQ = 0'>
+				SELECT TB_MOD_KNOWBOARD_SEQ.NEXTVAL, SEQ, 1, TITLE, CONTENT, POSTINGDATE, SUBJECT, PICTURE
+				</when>
+				<otherwise>
+				SELECT TB_MOD_KNOWBOARD_SEQ.NEXTVAL, SEQ, (R_SEQ + 1), TITLE, CONTENT, POSTINGDATE, SUBJECT, PICTURE
+				</otherwise>
+			</choose>
+			FROM write_KnowBoard 
+			WHERE SEQ = #{seq}
+		</select>  
+		
+		
+	  	<!-- 글 수정 업데이트-->
+	  	<select id="updatePost" parameterType="board">
+			UPDATE write_KnowBoard
+			<choose>
+				<when test='R_SEQ = 0'>
+				SET R_SEQ = 1, TITLE = #{title} , CONTENT = #{content}, SUBJECT = #{subject}
+				</when>
+				<otherwise>
+				SET R_SEQ = R_SEQ + 1, TITLE = #{title} , CONTENT = #{content}, SUBJECT = #{subject}
+				</otherwise>
+			</choose>
+			WHERE seq = #{seq}
+	  	</select>
+  	
+	
+<!-- 	<select id="modifyPost" parameterType="board" resultType="board"> -->
+<!--   		UPDATE knowledgeboard -->
+<!--   			SET TITLE  = #{TITLE} -->
+<!--   				CONTENT = #{CONTENT} -->
+<!--   				SUBJECT = #{SUBJECT} -->
+<!--   		WHERE SEQ = #{seq} -->
+<!-- 	</select> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- 글 목록보기 -->
+	<select id="getPostlist" parameterType="board" resultType="board">
+		SELECT *
+		 FROM write_KnowBoard
+		 WHERE state = 'Y'
+		ORDER BY seq
+	</select>
+   	 
+   	<!-- 글 상세보기 -->
+  	<select id="getBoard" parameterType="board" resultType="board">
+		SELECT *
+			FROM write_KnowBoard
+		WHERE seq = #{seq}
+  	</select>
+  	
+  	<!-- 조회수 증가 -->
+  	<select id="updatehits" parameterType="board">
+		UPDATE write_KnowBoard
+		SET HITS = HITS +1
+		WHERE seq = #{seq}
+  	</select>
+  	
+  	
+  	<!-- 지식게시판 - 댓글 저장 -->
+	<select id="saveComment" parameterType="know_Comment" > 
+  		INSERT INTO commentWrite_KnowBoard (COMMENT_ID, SEQ, NICKNAME, COMMENT_CONTENT, COMMENT_DATE, COMMENT_STATE)
+  		VALUES ( TB_COM_WRI_KNOWBOARD_SEQ.NEXTVAL , #{seq}, #{nickname}, #{comment_content}, sysdate, 'Y' )
+	</select>  
+	
+	<!-- 지식게시판 - 댓글 목록가져오기 -->
+	 <select id="getCommentList" parameterType="know_Comment" resultType="know_Comment">
+   	 	SELECT * 
+   	 	FROM commentWrite_KnowBoard
+   	 	WHERE seq = #{seq}
+   	 	ORDER BY COMMENT_ID
+   	 </select>
+
+	<!-- 지식게시판 - 댓글쓴 거 가져오기 -->
+	 <select id="getWriteComment" parameterType="know_Comment" resultType="know_Comment">
+	 	SELECT * 
+   	 	FROM commentWrite_KnowBoard
+   	 	WHERE seq = #{seq} 
+        AND COMMENT_ID = (SELECT MAX(COMMENT_ID) FROM commentWrite_KnowBoard WHERE seq = #{seq})
+   	 	ORDER BY COMMENT_ID DESC
+   	 </select>
+
+
+	<!-- 지식게시판 - 말머리 검색  -->
+	 <select id="searchSubject" parameterType="String" resultType="board">
+	 	SELECT * 
+   	 	FROM write_KnowBoard
+		WHERE subject = #{value}
+		AND state = 'Y'
+		ORDER BY seq
+   	 </select>
+   	 
+   	 
+
+  </mapper>
