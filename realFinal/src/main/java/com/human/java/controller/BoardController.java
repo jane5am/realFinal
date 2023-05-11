@@ -22,6 +22,11 @@ public class BoardController {
 	@Autowired
 	private BoardDAO boardDAO;
 	
+//	@RequestMapping(value = "/")
+//	public String home() {		
+//		return "home";
+//	}
+//	
 
 		@RequestMapping("/{step}.do") // 매핑으로 적은 ("/{step}.do") 조건에만 맞으면 무조건 호출되는 메소드, .do라고만 적혀있으면 무조건 호출된대
 		public String viewPage(@PathVariable String step) {
@@ -131,6 +136,7 @@ public class BoardController {
 		// 지식게시판- 글 목록보기
 		@RequestMapping("getPostlist")
 		public String getBoardList(Model model, String searchCondition, String searchKeyword) {
+			System.out.println("## getPostlist 컨트롤러 진입 ##");
 			
 			System.out.println("조건 : " + searchCondition);
 			System.out.println("키워드 : " + searchKeyword);
@@ -286,10 +292,7 @@ public class BoardController {
 		public HashMap<String, List<CommentVO>> deleteComment(CommentVO vo) {// 니가 입력하는 거 RentVO 로 받을꺼니까 그 VO변수값이랑 맞춰써라, vo로받을값을 rentTest에서는 let inputData = { rentTitle : "제목" ,  rentDirector : "감독"}; 이렇게 맞춰서 써서 보내준거임
 			System.out.println("## Ajax writeComment 컨트롤러 접근 ##");
 			
-			System.out.println("seq : " + vo.getSeq());
-			System.out.println("nickname : " + vo.getNickname());
-			System.out.println("content  : " + vo.getComment_content());
-			
+			System.out.println(vo);
 			
 			// 댓글 DB에 저장
 			boardDAO.saveComment(vo);

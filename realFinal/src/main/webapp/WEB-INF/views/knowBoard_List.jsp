@@ -2,105 +2,167 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<style type="text/css">
-
-h3.third span {
-  display: inline;
-  background-image: 
-    linear-gradient(to right, #46eabb, #5cf95e);
-  background-size: 100% 35%;
-  background-repeat: no-repeat;
-  background-position: center;
-  max-width: 960px; 
-  height: 100%;
-  margin: 0 auto; 
-  text-align: center;
-}
-h3 {
-	text-align: center;
-}
-
-</style>
 
 <title>Insert title here</title>
+ <meta content="" name="description">
+  <meta content="" name="keywords">
+  
+  <link href="resources/assets/img/favicon.png" rel="icon">
+  <link href="resources/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="resources/assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="resources/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="resources/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="resources/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="resources/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="resources/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="resources/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="resources/assets/css/style2.css" rel="stylesheet">
+  
+   <script type="text/javascript"  src="http://code.jquery.com/jquery-1.9.0.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
 
+
 <body>
 
-<h3 class="third"><span>soupieeeee<br>정확하고 빠른 국비학원 비교!</span></h3>
 
+  <header id="header" class="fixed-top ">
+    <div class="container d-flex align-items-center">
 
-	<h1>글목록</h1>
-	
-	  <form action="getPostlist" method="post">
+      <h1 class="logo me-auto"><a href="home.do">soupieeeee</a></h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto active" href="getPostlist">지식게시판</a></li>
+          <li><a class="nav-link scrollto" href="#about">게시판</a></li>
+          <li><a class="nav-link scrollto" href="#services">Services</a></li>
+          <li><a class="nav-link   scrollto" href="#portfolio">Portfolio</a></li>
+          <li><a class="nav-link scrollto" href="#team">Team</a></li>
+          <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="#">Drop Down 1</a></li>
+              <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
+                <ul>
+                  <li><a href="#">Deep Drop Down 1</a></li>
+                  <li><a href="#">Deep Drop Down 2</a></li>
+                  <li><a href="#">Deep Drop Down 3</a></li>
+                  <li><a href="#">Deep Drop Down 4</a></li>
+                  <li><a href="#">Deep Drop Down 5</a></li>
+                </ul>
+              </li>
+              <li><a href="#">Drop Down 2</a></li>
+              <li><a href="#">Drop Down 3</a></li>
+              <li><a href="#">Drop Down 4</a></li>
+            </ul>
+          </li>
+          <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+          <li><a class="getstarted scrollto" href="#about">Get Started</a></li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+	<div class="wholeDiv">
+
+	 <form action="getPostlist" method="post">
          
-               <select name="searchCondition">
-                  <option value='title'>제목</option>
-                  <option value='content'>내용</option>
-                  <option value='writer'>작성자</option>                                    
-               </select> <!--  넘어갈 데이터 1 : 여기 value값이 넘어갈거임 -->
-               <input name="searchKeyword" type="text" /> <!-- 넘어갈 데이터2 : input박스 안에 입력된 value값이 넘어갈거임 -->
-               <input type="submit" value="검색"/>
+         <select class="search">
+            <option value='title'>제목</option>
+            <option value='content'>내용</option>
+            <option value='writer'>작성자</option>                                    
+         </select> <!--  넘어갈 데이터 1 : 여기 value값이 넘어갈거임 -->
+         <input name="searchKeyword" type="text" /> <!-- 넘어갈 데이터2 : input박스 안에 입력된 value값이 넘어갈거임 -->
+         <input type="submit" value="검색"/>
                
       </form>
 	
 	
-	 <table border="1" class="knowledgeList">
-         <tr>
-            <th bgcolor="orange" width="100">
-            	<select name="searchCondition" class="searchCondition" >
-                  <option value='subject' hidden="hidden">말머리</option>
-                  <option value='all'>전체보기</option>
-                  <option value='JAVA'>JAVA</option>
-                  <option value='JavaScript'>JavaScript</option>
-                  <option value='C++'>C++</option>                                    
-               </select>
-              
-            </th>
-            <th bgcolor="orange" width="200">제목</th>
-            <th bgcolor="orange" width="150">작성자</th>
-            <th bgcolor="orange" width="150">등록일</th>
-            <th bgcolor="orange" width="100">조회수</th>
-         </tr>
-         <!-- JSTL : 자바 서버 페이지 표준 태그 라이브러리 
-            view페이지에 for if문등을 제공해주는 라이브러리
-         -->
-         <c:if test="${empty boardList }"> 
-         	<tr>
-         		<td colspan="5" align="center">
-         			😅 아직 작성된 글이 없습니다!
-         		</td>
-         	</tr>
-         </c:if>
-         
-         <c:forEach items="${boardList}" var="board">
-            <tr class="currentList">
-               <td> ${board.seq }</td>
-               <td align="left"><a href="getBoard.do?seq=${board.seq}">
-                    [${board.subject}]  ${board.title }</a></td>
-               <td>${board.writer }</td>
-               <td><fmt:formatDate value="${board.postingdate }" pattern="yyyy-MM-dd"/></td>
-               <td>${board.hits }</td>
-            </tr>
-         </c:forEach>
-      </table>
-      <br> 
-      
-   	<form action="knowBoard_write.do" method="post">
+	<section>
+	  <!--for demo wrap-->
+	  <h1 class="boardName">지식 게시판</h1>
+	  
+	  <div class="tbl-header">
+	    <table class="tbl_1" cellpadding="0" cellspacing="0" border="0" class="knowledgeList">
+	        <tr>
+	        	<th>
+	            	<select name="searchSubject" class="searchSubject" >
+	                  <option value='subject' hidden="hidden">말머리</option>
+	                  <option value='all'>전체보기</option>
+	                  <option value='JAVA'>JAVA</option>
+	                  <option value='JavaScript'>JavaScript</option>
+	                  <option value='C++'>C++</option>                                    
+	               </select>
+	              
+	            </th>
+	        	<th>제목</th>
+	        	<th>작성자</th>
+	        	<th>등록일</th>
+	        	<th>조회수</th>
+	        </tr>
+	      
+	         <c:if test="${empty boardList }"> 
+	         	<tr>
+	         		<td colspan="5" align="center">
+	         			😅 아직 작성된 글이 없습니다!
+	         		</td>
+	         	</tr>
+	         </c:if>
+	         <c:forEach items="${boardList}" var="board">
+	            <tr class="currentList">
+	               <td> ${board.seq }</td>
+	               <td align="left"><a href="getBoard.do?seq=${board.seq}">
+	                    [${board.subject}]  ${board.title }</a></td>
+	               <td>${board.writer }</td>
+	               <td><fmt:formatDate value="${board.postingdate }" pattern="yyyy-MM-dd"/></td>
+	               <td>${board.hits }</td>
+	            </tr>
+	         </c:forEach>
+	    </table>
+	  </div>
+	</section>
+	
+ 	<form action="knowBoard_write.do" method="post" class="write">
 		<input type="submit" value="글 쓰기" name="write">
 	
 	</form>
+	
+  </div>
+  
+
+  <!-- Vendor JS Files -->
+  <script src="resources/assets/vendor/aos/aos.js"></script>
+  <script src="resources/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="resources/assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="resources/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="resources/assets/vendor/php-email-form/validate.js"></script>
+  <script src="resources/assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="resources/assets/vendor/waypoints/noframework.waypoints.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="resources/assets/js/main.js"></script>
 </body>
 
+  
 <script type="text/javascript">
 	$(document).ready(function() {
 
-		$(".searchCondition").on("change", function() {
+		$(".searchSubject").on("change", function() {
 			  
 			  var selectedValue = $(this).val();
 			  console.log(selectedValue);
@@ -120,16 +182,17 @@ h3 {
 							
 
 							$.each(ajaxData['jsonList'], function(index, item) { // 데이터 =item
-								
+								console.log(index);
 									let tagHtml = "<tr class='currentList'>"+
-								  "<td>"+ajaxData['jsonList'][index]['seq']+"</td> "+
-									 "<td align='left'>"+"["+ ajaxData['jsonList'][index]['subject']+"] " + ajaxData['jsonList'][index]['title'] +"</td> "+
-									 "<td>"+ ajaxData['jsonList'][index]['writer'] +"</td> "+
-									 "<td>"+ ajaxData['jsonList'][index]['postingdate'] +"</td> "+
-									 "<td>"+ ajaxData['jsonList'][index]['hits'] +"</td> "+
-								  "</tr>";
+								                  "<td>"+ajaxData['jsonList'][index]['seq']+"</td>"+
+									              "<td align='left'>" + "<a href='getBoard.do?seq="+ ajaxData['jsonList'][index]['seq'] +"'>"+ "[" + ajaxData['jsonList'][index]['subject']+"] " + ajaxData['jsonList'][index]['title']+"</a>" +"</td> "+
+									              "<td>"+ ajaxData['jsonList'][index]['writer'] +"</td> "+
+									              "<td>"+ ajaxData['jsonList'][index]['postingdate'] +"</td> "+
+									              "<td>"+ ajaxData['jsonList'][index]['hits'] +"</td> "+
+								                  "</tr>";
+// 									let tagHtml = "<tr class='currentList'></tr>";
 										
-									$('.knowledgeList > tbody').append(tagHtml);
+									$('.tbl_1 > tbody').append(tagHtml);
 							});
 						
 					},

@@ -2,43 +2,83 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 
-<style type="text/css">
-
-h3.third span {
-  display: inline;
-  background-image: 
-    linear-gradient(to right, #46eabb, #5cf95e);
-  background-size: 100% 35%;
-  background-repeat: no-repeat;
-  background-position: center;
-  max-width: 960px; 
-  height: 100%;
-  margin: 0 auto; 
-  text-align: center;
-}
-h3 {
-	text-align: center;
-}
-
-</style>
-
-
 <title>Insert title here</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+ <meta content="" name="description">
+  <meta content="" name="keywords">
+  
+  <link href="resources/assets/img/favicon.png" rel="icon">
+  <link href="resources/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+<!--   <!-- Vendor CSS Files --> 
+  <link href="resources/assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="resources/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="resources/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="resources/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="resources/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="resources/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="resources/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="resources/assets/css/style2.css" rel="stylesheet">
+
 </head>
 <body>
-<h3 class="third"><span>soupieeeee<br>정확하고 빠른 국비학원 비교!</span></h3>
 
-<h1>글 상세</h1>     
+  <header id="header" class="fixed-top ">
+    <div class="container d-flex align-items-center">
+
+      <h1 class="logo me-auto"><a href="home.do">soupieeeee</a></h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto active" href="getPostlist">지식게시판</a></li>
+          <li><a class="nav-link scrollto" href="#about">게시판</a></li>
+          <li><a class="nav-link scrollto" href="#services">Services</a></li>
+          <li><a class="nav-link   scrollto" href="#portfolio">Portfolio</a></li>
+          <li><a class="nav-link scrollto" href="#team">Team</a></li>
+          <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="#">Drop Down 1</a></li>
+              <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
+                <ul>
+                  <li><a href="#">Deep Drop Down 1</a></li>
+                  <li><a href="#">Deep Drop Down 2</a></li>
+                  <li><a href="#">Deep Drop Down 3</a></li>
+                  <li><a href="#">Deep Drop Down 4</a></li>
+                  <li><a href="#">Deep Drop Down 5</a></li>
+                </ul>
+              </li>
+              <li><a href="#">Drop Down 2</a></li>
+              <li><a href="#">Drop Down 3</a></li>
+              <li><a href="#">Drop Down 4</a></li>
+            </ul>
+          </li>
+          <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+          <li><a class="getstarted scrollto" href="#about">Get Started</a></li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+	<h1> 지식 게시판 </h1><br>
+	<h4> 지식을 공유하고 새로운 아이디어를 얻어보세요</h4><br>   
 
          
       <hr>
-		<form action="getPostlist" method="post">
+		<form method="post" id="frm"> <!-- action="getPostlist" -->
          <input type="text" name="seq" id="seq"  value="${board.seq}" /> <!-- type="hidden" -->
          <table border="1" cellpadding="0" cellspacing="0">
             <tr >
@@ -65,9 +105,9 @@ h3 {
             </tr>
             <tr>
                <td colspan="2" align="center">
-       		        <button type="submit" data-oper="moveModify" class="btn btn-default">수정</button>
-       				<button type="submit" data-oper="deletePost" class="btn btn-default" >삭제</button>
-       				<button type="submit" data-oper= "getPostlist" class="btn btn-default" >글목록</button>
+       		        <button type="button" data-oper="moveModify" class="btn btn-default" >수정</button>
+       				<button type="button" data-oper="deletePost" class="btn btn-default">삭제</button>
+       				<button type="button" data-oper= "getPostlist" class="btn btn-default" id="listBtn">글목록</button>
                </td>
             </tr>
          </table>
@@ -86,13 +126,13 @@ h3 {
 				<td></td>
 				<td></td>
 				
-				<c:forEach items="${commentList}" var="commentlist">
+				<c:forEach items="${commentList}" var="comment">
 		           <tr>
-		              <td> ${commentlist.nickname }</td>
-		              <td> ${commentlist.comment_content }</td>
-		              <td><fmt:formatDate value="${commentlist.comment_date }" pattern="yyyy-MM-dd"/></td>
+		              <td> ${comment.nickname }</td>
+		              <td> ${comment.comment_content }</td>
+		              <td><fmt:formatDate value="${comment.comment_date }" pattern="yyyy-MM-dd"/></td>
 		              <td><button>수정</button></td>
-		              <td><button class="commentDel">삭제</button></td>
+		              <td><input type="button" class="commentDel" value="삭제"></td>
 		           </tr>
 		        </c:forEach>
 			</tr>
@@ -100,78 +140,36 @@ h3 {
 		  
       </form>
 
+
+<!--   Vendor JS Files -->
+  <script src="resources/assets/vendor/aos/aos.js"></script>
+  <script src="resources/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="resources/assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="resources/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="resources/assets/vendor/php-email-form/validate.js"></script>
+  <script src="resources/assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="resources/assets/vendor/waypoints/noframework.waypoints.js"></script>
+
+<!-- Template Main JS File -->
+  <script src="resources/assets/js/main.js"></script>
+  
+  
 </body>
+<script type="text/javascript"  src="http://code.jquery.com/jquery-1.9.0.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+
 <script type="text/javascript">
-	$(document).ready(function() {
-		
-		
-// 		// 댓글 출력
-// 			let seq = $('#seq').val();
-		
-// 		 $.ajax({
-			 
-// 		    url: "/getCommentList",
-// 		    method: "POST",
-// 		    data: { "seq" : seq }, // 게시물 ID를 전달해서 댓글 목록을 가져옴
-// 		    dataType : 'json', // json쓸거면 데이터타입에 json써줘야한다 그리고 변환기 pom.xml에 넣어주기
-// 		    //---------------------------------------------------
-// 		    success: function(ajaxData) {
-// 		    	console.log("성공!");
-// 		      // 댓글 목록 출력
-// 		    	$.each(ajaxData['jsonList'], function(index, item) { // 데이터 =item
 
-// 					console.log("얍" + ajaxData['jsonList'][index]['comment_content']); 
-					
-// 						let tagHtml = "<tr>"+
-// 					  "<td>"+ajaxData['jsonList'][index]['nickname']+"</td> "+
-// 						 "<td>"+ ajaxData['jsonList'][index]['comment_content'] +"</td> "+
-// 						 "<td>"+ ajaxData['jsonList'][index]['comment_date'] +"</td> "+
-// 						 "<td><button type='button'>수정</button></td> "+
-// 						 "<td><button type='button'>삭제</button></td> "+
-// 					  "<input type = 'text' value="+ +ajaxData['jsonList'][index]['comment_id'] +">" +
-// 					  "</tr>";
-					  
-							
-// 						$('.commentTable > tbody').append(tagHtml);
-// 				});
-		      
-// 		      },
-// 		    error: function() {
-// 		      console.log("실패!");
-// 		    }
-
-// 		 });
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		var formObj = $("form");
+$(document).ready(function() {
+	
+	var formObj = $("form");
 		$('.btn').on("click", function(e) { 		//모든 button태그에 대한 클릭 이벤트 처리
 			e.preventDefault(); 					//버튼의 기본 submit() 동작 막기
 			var operation = $(this).data("oper");	//data-oper 값 읽어오기
 			console.log(operation);
-
-			if (operation === 'deletePost') {
+		
+			if (operation == 'deletePost') {
 				if (confirm("게시글을 삭제하시겠습니까?") == true) {
 					alert("게시글이 삭제되었습니다.");
 					formObj.attr("action", "deletePost");
@@ -237,7 +235,6 @@ h3 {
 				dataType : 'json', // json쓸거면 데이터타입에 json써줘야한다 그리고 변환기 pom.xml에 넣어주기
 				//----------------------------------
 				success : function (ajaxData) { // ajaxData : 그냥 아무 변수명을 쓰면된다, 뭐 data라고 써도되고
-					alert('성공'); // 이때 ajaxData는 컨트롤러의 return데이터이다
 					console.log(ajaxData);
 						let str = JSON.stringify(ajaxData); // <> parse()
 						console.log(str); 
@@ -259,7 +256,7 @@ h3 {
 								 "<td><a>"+ ajaxData['jsonList'][index]['comment_content'] +"</a></td> "+
 								 "<td>"+ ajaxData['jsonList'][index]['comment_date'] +"</td> "+
 								 "<td><button type='button' class='commentMod' >수정</button></td> "+
-								 "<td><button type='button' class='commentDel'>삭제</button></td> "+
+								 "<td><input type='button' class='commentDel' value='삭제'></td> "+
 							  "</tr>";
 									
 								$('.commentTable > tbody').append(tagHtml);
@@ -291,9 +288,11 @@ h3 {
 		$(".commentDel").on("click", function(){
 			  alert("문장이 클릭되었습니다.");
 			  
+			  var comment_id = $("#comment_id").val();
+			  
 				$.ajax( {
 					url : "deleteComment",
-					data : inputData,
+					data : {"comment_id" : comment_id },
 					type : "post",
 					//----------------------------------
 					success : function (ajaxData) {
@@ -330,5 +329,8 @@ h3 {
 		
 		
 	})
+	
+	
+	
 </script>
 </html>
