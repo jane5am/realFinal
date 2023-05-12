@@ -177,6 +177,22 @@ public class BoardDAO {
 	}
 
 
+	public void deleteComment(CommentVO vo) {
+		System.out.println("## DAO deleteComment 접근 ##");
+		mybatis.insert("boardDAO.deleteComment",vo); 
+		System.out.println("댓글 삭제완료");
+	}
+
+
+	public List<CommentVO> deleteCommentSel(CommentVO vo) {
+		List<CommentVO> rList;
+		rList = mybatis.selectOne("boardDAO.deleteCommentSel",vo); 
+		
+		System.out.println("rList : " + rList);
+		return rList;
+	}
+
+
 
 //	public List<RentVO> selectMovieList( RentVO vo) {
 //		// DB와 접근할거다 - DB랑 접근할거니까 오라클 준비되어있어야겠지

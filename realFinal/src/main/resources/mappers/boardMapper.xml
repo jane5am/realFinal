@@ -19,15 +19,25 @@
    	  -->
    	    
    	  <!-- 글 저장 -->
-	<select id="savePost" parameterType="board" > 
-  		INSERT INTO write_KnowBoard (SEQ, R_SEQ, TITLE, WRITER, CONTENT, POSTINGDATE, SUBJECT, PICTURE, HITS , STATE)
-  		VALUES ( TB_KNOWBOARD_SEQ.NEXTVAL , 0, #{title}, 'writer', #{content}, sysdate, #{subject}, 'picture', 0, 'Y' )
-	</select>  
+<!-- 	<select id="savePost" parameterType="board" >  -->
+<!--   		INSERT INTO write_KnowBoard (SEQ, R_SEQ, TITLE, WRITER, CONTENT, POSTINGDATE, SUBJECT, PICTURE, HITS , STATE) -->
+<!--   		VALUES ( TB_KNOWBOARD_SEQ.NEXTVAL , 0, #{title}, 'writer', #{content}, sysdate, #{subject}, 'picture', 0, 'Y' ) -->
+<!-- 	</select>   -->
+	
+	<insert id="savePost" parameterType="board">
+
+     INSERT INTO write_KnowBoard (SEQ, R_SEQ, TITLE, WRITER, CONTENT, POSTINGDATE, SUBJECT, PICTURE, HITS , STATE)
+     VALUES ( TB_KNOWBOARD_SEQ.NEXTVAL , 0, #{title}, 'writer', #{content}, sysdate, #{subject}, 'picture', 0, 'Y' )
+		<selectKey keyProperty="seq" resultType="Int" order="AFTER">
+			SELECT MAX(seq) FROM write_KnowBoard
+		</selectKey>
+	</insert>
+
 
 	<!-- 글 상세 불러오기 -->
 	<select id="getPost" parameterType="board" resultType="board">
   		SELECT * FROM write_KnowBoard
- 		WHERE title = #{title}
+ 		WHERE SEQ = #{seq}
 	</select>
 	
 	<!-- 글 삭제 -->
@@ -66,29 +76,6 @@
 			</choose>
 			WHERE seq = #{seq}
 	  	</select>
-  	
-	
-<!-- 	<select id="modifyPost" parameterType="board" resultType="board"> -->
-<!--   		UPDATE knowledgeboard -->
-<!--   			SET TITLE  = #{TITLE} -->
-<!--   				CONTENT = #{CONTENT} -->
-<!--   				SUBJECT = #{SUBJECT} -->
-<!--   		WHERE SEQ = #{seq} -->
-<!-- 	</select> -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	<!-- 글 목록보기 -->
 	<select id="getPostlist" parameterType="board" resultType="board">
@@ -124,6 +111,7 @@
    	 	SELECT * 
    	 	FROM commentWrite_KnowBoard
    	 	WHERE seq = #{seq}
+   	 	AND COMMENT_STATE = 'Y'
    	 	ORDER BY COMMENT_ID
    	 </select>
 
@@ -133,6 +121,7 @@
    	 	FROM commentWrite_KnowBoard
    	 	WHERE seq = #{seq} 
         AND COMMENT_ID = (SELECT MAX(COMMENT_ID) FROM commentWrite_KnowBoard WHERE seq = #{seq})
+   	 	AND COMMENT_STATE = 'Y'
    	 	ORDER BY COMMENT_ID DESC
    	 </select>
 
@@ -146,6 +135,23 @@
 		ORDER BY seq
    	 </select>
    	 
-   	 
+ 	<!-- 댓글 삭제 -->
+	<select id="deleteComment" parameterType="know_Comment" resultType="know_Comment">
+  		UPDATE COMMENTWRITE_KNOWBOARD
+ 			SET COMMENT_STATE = 'N'
+ 		WHERE comment_id = #{comment_id}
+	</select>
+	 
+<!--  		<selectKey keyProperty="comment_id" resultType="Int" order="BEFORE"> -->
+<!-- 			SELECT * FROM COMMENTWRITE_KNOWBOARD  -->
+<!-- 			WHERE comment_id = #{comment_id} -->
+<!-- 		</selectKey> -->
 
+	<!-- 삭제한 댓글 조회 -->
+	<select id="deleteCommentSel" parameterType="know_Comment" resultType="know_Comment">
+		SELECT *
+		FROM COMMENTWRITE_KNOWBOARD
+		WHERE comment_id = #{comment_id}
+	</select>
+	
   </mapper>

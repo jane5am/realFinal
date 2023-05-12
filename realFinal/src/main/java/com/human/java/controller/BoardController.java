@@ -22,12 +22,6 @@ public class BoardController {
 	@Autowired
 	private BoardDAO boardDAO;
 	
-//	@RequestMapping(value = "/")
-//	public String home() {		
-//		return "home";
-//	}
-//	
-
 		@RequestMapping("/{step}.do") // 매핑으로 적은 ("/{step}.do") 조건에만 맞으면 무조건 호출되는 메소드, .do라고만 적혀있으면 무조건 호출된대
 		public String viewPage(@PathVariable String step) {
 			// 단순하게 페이지를 이동하는 경우에 호출되는 메소드
@@ -48,10 +42,7 @@ public class BoardController {
 			//rentTest.jsp에서 input태그에 name title, director를 VO에있는 변수명과 동일하게 넣어줬잖아
 			// 그래서 FORM태그로 전달해서 그게 이 컨트롤러에 오면 파라미터에 RentVO vo 써줬으니까 자동으로 vo에 담긴대
 			// 잘 담겼는지 확인해볼까?
-			System.out.println("vo.seq() : " + vo.getSeq());
-			System.out.println("vo.getTitle() : " + vo.getTitle());
-			System.out.println("vo.getContent() : " + vo.getContent());
-			System.out.println("vo : " + vo);
+			System.out.println(vo);
 		    boardDAO.savePost(vo);
 			
 			System.out.println("컨트롤러 복귀");
@@ -71,12 +62,6 @@ public class BoardController {
 			
 			System.out.println("## deletePost 컨트롤러 진입 ##");
 			
-			//rentTest.jsp에서 input태그에 name title, director를 VO에있는 변수명과 동일하게 넣어줬잖아
-			// 그래서 FORM태그로 전달해서 그게 이 컨트롤러에 오면 파라미터에 RentVO vo 써줬으니까 자동으로 vo에 담긴대
-			// 잘 담겼는지 확인해볼까?
-			System.out.println("vo.getseq() : " + vo.getSeq());
-			System.out.println("vo.getTitle() : " + vo.getTitle());
-			System.out.println("vo.getContent() : " + vo.getContent());
 			System.out.println("vo : " + vo);
 			boardDAO.deletePost(vo);
 			
@@ -84,10 +69,8 @@ public class BoardController {
 			model.addAttribute("board", boardDAO.deletePost(vo));
 
 			System.out.println("컨트롤러 복귀");
-//			return "knowBoard_List";
+
 			return "redirect:/getPostlist";
-			// DB로 부터 가져온 데이터 rList를 이제 화면에 출력해야한다
-			// session, model 등 통신을 위한 내장객체를 활용하여 출력하는데 그 중에 우리는 model을 쓸거다, 파라미터로 선언해주면된다 그래서 (Model model) 이렇게 써주는것
 		}
 
 		
@@ -101,9 +84,6 @@ public class BoardController {
 
 			System.out.println(" moveModify 컨트롤러 복귀");
 			
-			// DB로 부터 가져온 데이터 rList를 이제 화면에 출력해야한다
-			// session, model 등 통신을 위한 내장객체를 활용하여 출력하는데 그 중에 우리는 model을 쓸거다, 파라미터로 선언해주면된다 그래서 (Model model) 이렇게 써주는것
-			
 			return "knowBoard_modify";
 		}
 		
@@ -113,15 +93,10 @@ public class BoardController {
 			
 			System.out.println("## modifyPost 컨트롤러 진입 ##");
 			
-			//rentTest.jsp에서 input태그에 name title, director를 VO에있는 변수명과 동일하게 넣어줬잖아
-			// 그래서 FORM태그로 전달해서 그게 이 컨트롤러에 오면 파라미터에 RentVO vo 써줬으니까 자동으로 vo에 담긴대
-			// 잘 담겼는지 확인해볼까?
-			System.out.println("vo.seq() : " + vo.getSeq());
 			System.out.println("vo : " + vo);
 		    boardDAO.modifyPost(vo);
 			
 			System.out.println("컨트롤러 복귀");
-//			System.out.println("Mvo.R_seq() : " + Mvo.getR_Seq());
 			
 			boardDAO.updatePost(vo);
 			
@@ -129,8 +104,6 @@ public class BoardController {
 			System.out.println(model.toString());
 			return "knowBoard_textDetail";
 			
-			// DB로 부터 가져온 데이터 rList를 이제 화면에 출력해야한다
-			// session, model 등 통신을 위한 내장객체를 활용하여 출력하는데 그 중에 우리는 model을 쓸거다, 파라미터로 선언해주면된다 그래서 (Model model) 이렇게 써주는것
 		}
 		
 		// 지식게시판- 글 목록보기
@@ -289,46 +262,25 @@ public class BoardController {
 		// 지식게시판 - 댓글삭제
 		@RequestMapping("deleteComment")
 		@ResponseBody       // @ResponseBody: return이 페이지로 변환하는 것이 아니라 데이터를 리턴하겠다고 하는것
-		public HashMap<String, List<CommentVO>> deleteComment(CommentVO vo) {// 니가 입력하는 거 RentVO 로 받을꺼니까 그 VO변수값이랑 맞춰써라, vo로받을값을 rentTest에서는 let inputData = { rentTitle : "제목" ,  rentDirector : "감독"}; 이렇게 맞춰서 써서 보내준거임
-			System.out.println("## Ajax writeComment 컨트롤러 접근 ##");
-			
+		public CommentVO deleteComment(CommentVO vo) {// 니가 입력하는 거 RentVO 로 받을꺼니까 그 VO변수값이랑 맞춰써라, vo로받을값을 rentTest에서는 let inputData = { rentTitle : "제목" ,  rentDirector : "감독"}; 이렇게 맞춰서 써서 보내준거임
+			System.out.println("## Ajax deleteComment 컨트롤러 접근 ##");
 			System.out.println(vo);
 			
-			// 댓글 DB에 저장
-			boardDAO.saveComment(vo);
+			// DB 상태 N으로 바꿔주기 
+			boardDAO.deleteComment(vo);
 			
-			// 댓글 LIST 가져오기
-			List<CommentVO> rList = boardDAO.getWriteComment(vo);
+			System.out.println("N으로 바꿨어요");
 			
-			System.out.println(rList.get(0));
-			
-			//현재 rList는 list형태이다
-//			[RentVO(rentId=2, rentTitle=아바타, rentDirector=이감독, rentState=Y, rentDate=2023-04-20 10:23:46)]
-//			[vo객체, vo객체, vo객체 ... ]
-			// JSON 형태
-//			{
-//				0 :	{ rentId : 2 , rentTitle: 아타바, rentDirector : 이감독 ... } 이 안에 rentId : 1이렇게 또 들어가면 rentId가 두번들어가서 중복되니 안된다 그래서 다ㄹ른 중괄호를 만들어주고 그걸 또 감싸줘야한다
-//				1 : { rentId : 1 , rentTitle: 존윅4, rentDirector : 김감독 ... }
-//			}
-			
-			
-//			return "ajax 데이터"; // 원래는 이동할 페이지 였는데 ajax는 더이상 return할 페이지가 없으니 전달할 데이터를 쓴다, ajax쓰면 Model도 안써도된대
-			// 그래서 붙는게 @responseBody
-//			 return rList; // 이 코드가 정상적으로 진행되도록 구현해야한다. rList는 List형태 / List형태가 자바스크립트에서 문제가 없어야 한다
-			// return 이 List일 경우 다음과 같은 형태(json)로 전달된다 : [ {} , {} ]
-			// 단 웹표준에 맞지 않아서 지양된다
-			
-			// 가장 올바른 방법 은 json 은 java에서 hashMap의 형태로 구현이된다
-			// hashMap의 형태로 리턴해서 json으로 변환하는 것이다
-			
-			
-			HashMap<String, List<CommentVO>> map = new HashMap<String, List<CommentVO>>(); // 만약 보낼데이터가 List<RentVO>가 아니고 여러 형태다 하면 Object라고 넣어도 된대
-			map.put("jsonList" , rList);
-			
-			return map; // return 타입이 HashMap<String, List<RentVO>> 
+			// 삭제한 댓글 뽑기
+//			List<CommentVO> rList = boardDAO.deleteCommentSel(vo);
+//			
+//			HashMap<String, List<CommentVO>> map = new HashMap<String, List<CommentVO>>(); // 만약 보낼데이터가 List<RentVO>가 아니고 여러 형태다 하면 Object라고 넣어도 된대
+//			map.put("jsonList" , rList);
+//			
+//			return map; // return 타입이 HashMap<String, List<RentVO>> 
 			// 근데 전달해야할 값이 아까 위에 return rList 써도된대
+			return vo;
 		}
-		
 		
 		
 		

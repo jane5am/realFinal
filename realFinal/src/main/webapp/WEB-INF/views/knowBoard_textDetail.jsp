@@ -129,9 +129,9 @@
 				<c:forEach items="${commentList}" var="comment">
 		           <tr>
 		              <td> ${comment.nickname }</td>
-		              <td> ${comment.comment_content }</td>
+		              <td> <input type="hidden" id="comment_id" value="${comment.comment_id}"> ${comment.comment_content }</td>
 		              <td><fmt:formatDate value="${comment.comment_date }" pattern="yyyy-MM-dd"/></td>
-		              <td><button>수정</button></td>
+		              <td><input type="button" class="commentMod" value="수정"></td>
 		              <td><input type="button" class="commentDel" value="삭제"></td>
 		           </tr>
 		        </c:forEach>
@@ -253,9 +253,9 @@ $(document).ready(function() {
 							
 								let tagHtml = "<tr>"+
 							  "<td>"+ajaxData['jsonList'][index]['nickname']+"</td> "+
-								 "<td><a>"+ ajaxData['jsonList'][index]['comment_content'] +"</a></td> "+
+								 "<td>"+ "<input type='hidden' id='comment_id' value='"+ ajaxData['jsonList'][index]['comment_id'] + "'>" + ajaxData['jsonList'][index]['comment_content'] +"</td> "+
 								 "<td>"+ ajaxData['jsonList'][index]['comment_date'] +"</td> "+
-								 "<td><button type='button' class='commentMod' >수정</button></td> "+
+								 "<td><input type='button' class='commentMod' value='수정'></td> "+
 								 "<td><input type='button' class='commentDel' value='삭제'></td> "+
 							  "</tr>";
 									
@@ -285,38 +285,44 @@ $(document).ready(function() {
 		})
 		
 		
-		$(".commentDel").on("click", function(){
-			  alert("문장이 클릭되었습니다.");
+		//댓글 삭제
+		$("body").on("click",".commentDel", function(){
+			  alert("댓글을 삭제합니다");
 			  
-			  var comment_id = $("#comment_id").val();
-			  
+// 			    const delButtons = document.querySelectorAll('.commentDel'); // 삭제 버튼을 모두 선택합니다.
+
+// 			    delButtons.forEach(button => {
+// 			        button.addEventListener('click', () => {
+// 			            const commentId = button.parentElement.parentElement.querySelector('#comment_id').value;
+// 			            console.log(commentId); // 해당 댓글의 id 값이 출력됨
+// 			            // 이후 삭제 처리 로직을 작성할 수 있음
+// 			        });
+// 			    });
+			    
+			    
+// 			  const commentId = this().parentElement.parentElement.querySelector('#comment_id').value
+			 const comment_id = $(this).closest('tr').find('#comment_id').val();
+			  console.log(comment_id);
 				$.ajax( {
 					url : "deleteComment",
-					data : {"comment_id" : comment_id },
+					data : { "comment_id" : comment_id },
 					type : "post",
 					//----------------------------------
 					success : function (ajaxData) {
-						alert('성공'); // 이때 ajaxData는 컨트롤러의 return데이터이다
 						console.log(ajaxData);
+						alert('성공'); // 이때 ajaxData는 컨트롤러의 return데이터이다
+						
 							let str = JSON.stringify(ajaxData); // <> parse()
 							console.log(str); 
+							console.log(comment_id); 
 
-							$.each(ajaxData['jsonList'], function(index, item) { // 데이터 =item
-								console.log("얍" + ajaxData['jsonList'][index]['comment_content']); 
-								
-									let tagHtml = "<tr>"+
-								  "<td>"+ajaxData['jsonList'][index]['nickname']+"</td> "+
-									 "<td><a>"+ ajaxData['jsonList'][index]['comment_content'] +"</a></td> "+
-									 "<td>"+ ajaxData['jsonList'][index]['comment_date'] +"</td> "+
-									 "<td><button type='button' class='commentMod' >수정</button></td> "+
-									 "<td><button type='button' class='commentDel'>삭제</button></td> "+
-								  "</tr>";
-										
-									$('.commentTable > tbody').append(tagHtml);
-							});
-							
-							$('#nickname').val('');
-							$('#commentContent').val('');
+// 							location.reload();
+						    $('tr').each(function() {
+					            if ($(this).find('.comment_id').val() === comment_id) {
+					            	console.log( $(this).find('.comment_id').val() + "dddd" );
+					                $(this).remove();
+					            }
+					        });
 						
 					},
 					error : function() {
