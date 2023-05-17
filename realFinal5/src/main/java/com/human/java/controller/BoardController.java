@@ -15,6 +15,7 @@ import com.human.java.dao.BoardDAO;
 import com.human.java.model.BoardVO;
 import com.human.java.model.BookmarkVO;
 import com.human.java.model.CommentVO;
+import com.human.java.model.PageVO;
 
 // @Controller: 이걸써야 import되면서 기능이 입혀짐 ##2
 @Controller 
@@ -112,7 +113,7 @@ public class BoardController {
 		
 		// 지식게시판- 글 목록보기
 		@RequestMapping("getPostlist")
-		public String getBoardList(Model model, String searchCondition, String searchKeyword) {
+		public String getBoardList(Model model, String searchCondition, String searchKeyword,PageVO vo) {
 			System.out.println("## getPostlist 컨트롤러 진입 ##");
 			
 			System.out.println("조건 : " + searchCondition);
@@ -125,7 +126,7 @@ public class BoardController {
 			
 			// 컨트롤러에서 할 역할 : 글목록을 조회하기 위해서는 DB를 접근해야 한다
 			// 조회 기능 : DB에서 필요한 값(파라미터, 인자) / DB에서 출력되는 값(return)
-			List<BoardVO> bList = boardDAO.getPostlist( map );
+			List<BoardVO> bList = boardDAO.getPostlist( map, vo );
 
 			//			for ( BoardVO v : bList) {
 //		         System.out.println(v);

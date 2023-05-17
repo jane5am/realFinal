@@ -71,14 +71,23 @@
 			WHERE seq = #{seq}
 	  	</select>
 
-	<!-- 글 목록보기 -->
-	<select id="getPostlist" parameterType="board" resultType="board">
-		SELECT *
-		 FROM write_KnowBoard
-		 WHERE state = 'Y'
-		ORDER BY seq DESC
-	</select>
+		<!-- 글 목록보기 --> 
+<!-- 	<select id="getPostlist" parameterType="board" resultType="board"> -->
+<!-- 		SELECT * -->
+<!-- 		 FROM write_KnowBoard -->
+<!-- 		 WHERE state = 'Y' -->
+<!-- 		ORDER BY seq DESC -->
+<!-- 	</select> -->
    	 
+   	 <select id="getPostlist" parameterType="board" resultType="board">
+		SELECT *
+		FROM write_KnowBoard
+		WHERE SEQ = #{seq} IN ( SELECT seq FROM rownum as rnum, seq 
+								(SELECT seq FROM ORDER BY seq desc)
+								WHERE rnum BETWEEN)
+		ORDER BY SEQ DESC
+	</select>
+	
    	<!-- 글 상세보기 -->
   	<select id="getBoard" parameterType="board" resultType="board">
 		SELECT *
@@ -156,4 +165,5 @@
   			AND seq = #{seq}
 	</select>
 
+	
   </mapper>

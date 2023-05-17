@@ -30,6 +30,7 @@
 
 <!-- Template Main CSS File -->
 <link href="resources/assets/css/style2.css" rel="stylesheet">
+<link href="resources/assets/css/style3.css" rel="stylesheet">
   
   <!-- 테이블 CSS -->
 <link href="resources/css/css.css" rel="stylesheet">
@@ -89,7 +90,7 @@
 	
 	<div class="board_wrap">
 
-		<form action="getPostlist" method="post">
+		<form action="getPostlist" method="post" class="serchForm">
 
 			<select class="search">
 				<option value='title'>제목</option>
@@ -145,21 +146,38 @@
 			</div>
 		</section>
 		
+		<c:forEach items="mList" var="${totalPageCount}" ">
+			<a href="listMessage.jsp?page=${i}">[ ${i} ]</a>
+		</c:forEach>
 		
-			<div class="board_page">
-				<a href="#" class="bt first"><<</a> <a href="#" class="bt prev"><</a>
-				<a href="#" class="num on">1</a> <a href="#" class="num">2</a> <a
-					href="#" class="num">3</a> <a href="#" class="num">4</a> <a
-					href="#" class="num">5</a> <a href="#" class="bt next">></a> <a
-					href="#" class="bt last">>></a>
-			</div>
-			
+		<c:if test="${groupNo > 1}">
+			<a href="listMessage.jsp?group=${groupNo-1}"> ◀ </a>
+		</c:if>
+		
+		<c:forEach var="i" begin="${firstPageNo}" end="${endPageNo}">
+			<a href="listMessage.jsp?page=${i}&amp;group=${groupNo}"> [ ${i} ] </a>
+		</c:forEach>
+		
+		<c:if test="${groupNo + 1 <= totalCountGroup}">
+			<a href="listMessage.jsp?group=${groupNo+1}"> ▶ </a>
+		</c:if>
+<!-- <!-- 			<div class="board_page"> --> -->
+<!-- <!-- 				<a href="#" class="bt first"><<</a> <a href="#" class="bt prev"><</a> --> -->
+<!-- <!-- 				<a href="#" class="num on">1</a>  --> -->
+<!-- <!-- 				<a href="#" class="num">2</a>  --> -->
+<!-- <!-- 				<a href="#" class="num">3</a>  --> -->
+<!-- <!-- 				<a href="#" class="num">4</a>  --> -->
+<!-- <!-- 				<a href="#" class="num">5</a>  --> -->
+<!-- <!-- 				<a href="#" class="bt next">></a>  --> -->
+<!-- <!-- 				<a href="#" class="bt last">>></a> --> -->
+<!-- <!-- 			</div> -->
 
 			<form action="knowBoard_write.do" method="post" class="write bt_wrap">
 				<input type="submit" value="글 쓰기" name="write" class="btn on">
 			</form>
 
 	</div>
+	
 <!-- Vendor JS Files -->
 <script src="resources/assets/vendor/aos/aos.js"></script>
 <script	src="resources/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -178,55 +196,51 @@
 <script type="text/javascript">
 	$(document).ready( function() {
 		
-		
-	    let groupNo = 1;
-
 	    
 		$(".searchSubject").on("change", function() {
 
-		var selectedValue = $(this).val();
-		console.log(selectedValue);
-
-		$.ajax({
-			//url : 우리 form태그에 있던 action과 같은 기능, 내가 접속하려고 하는 페이지의 맵핑명, controller에 있는 맵핑명
-			url : "searchSubject", // 여기서 "ajax"는 컨트롤러에 있던 @RequestMapping("ajax")의 ajax이다
-			data : { "selectedValue" : selectedValue },
-			type : "post",
-			dataType : 'json',
-			//----------------------------------
-			success : function(ajaxData) { // ajaxData : 그냥 아무 변수명을 쓰면된다, 뭐 data라고 써도되고
-				alert("성공"); // 이때 ajaxData는 컨트롤러의 return데이터이다
-
-				$('.currentList').remove();
-				$.each(	ajaxData['jsonList'], function(	index, item) { // 데이터 =item
-					console.log(index);
-					let tagHtml = "<tr class='currentList'>"
-								+ "<td>"+ ajaxData['jsonList'][index]['seq']+ "</td>"
-								+ "<td align='left'>"+ "<a href='getBoard.do?seq="+ ajaxData['jsonList'][index]['seq']+ "'>"+ "["+ ajaxData['jsonList'][index]['subject']+ "] "
-								+ ajaxData['jsonList'][index]['title'] + "</a>"	+ "</td>" + "<td>"+ ajaxData['jsonList'][index]['writer']+ "</td> "	
-								+ "<td>"
-																						+ ajaxData['jsonList'][index]['postingdate']
-																						+ "</td> "
-																						+ "<td>"
-																						+ ajaxData['jsonList'][index]['hits']
-																						+ "</td> "
-																						+ "</tr>";
-																				// 									let tagHtml = "<tr class='currentList'></tr>";
-
-																				$(
-																						'.tbl_1 > tbody')
-																						.append(
-																								tagHtml);
-																			});
-
-														},
-														error : function() {
-															alert('실패');
-														},
-													//dataType 은 지금은 필요없대, 주고받을때 에러 생기면 쓰는 거라 지금은 필요없대
-													});
-
-										});
+			var selectedValue = $(this).val();
+			console.log(selectedValue);
+	
+			$.ajax({
+				//url : 우리 form태그에 있던 action과 같은 기능, 내가 접속하려고 하는 페이지의 맵핑명, controller에 있는 맵핑명
+				url : "searchSubject", // 여기서 "ajax"는 컨트롤러에 있던 @RequestMapping("ajax")의 ajax이다
+				data : { "selectedValue" : selectedValue },
+				type : "post",
+				dataType : 'json',
+				//----------------------------------
+				success : function(ajaxData) { // ajaxData : 그냥 아무 변수명을 쓰면된다, 뭐 data라고 써도되고
+					alert("성공"); // 이때 ajaxData는 컨트롤러의 return데이터이다
+	
+					$('.currentList').remove();
+					$.each(	ajaxData['jsonList'], function(	index, item) { // 데이터 =item
+						console.log(index);
+						let tagHtml = "<tr class='currentList'>"
+									+ "<td>"+ ajaxData['jsonList'][index]['seq']+ "</td>"
+									+ "<td align='left'>"+ "<a href='getBoard.do?seq="+ ajaxData['jsonList'][index]['seq']+ "'>"+ "["+ ajaxData['jsonList'][index]['subject']+ "] "
+									+ ajaxData['jsonList'][index]['title'] + "</a>"	+ "</td>" + "<td>"+ ajaxData['jsonList'][index]['writer']+ "</td> "	
+									+ "<td>"+ ajaxData['jsonList'][index]['postingdate']+ "</td> "
+									+ "<td>"+ ajaxData['jsonList'][index]['hits']+ "</td> "
+									+ "</tr>";
+	// 					let tagHtml = "<tr class='currentList'></tr>";
+					$('.tbl_1 > tbody').append(tagHtml);
+	
 					});
+				}, error : function() {
+					alert('실패');
+				},
+			});
+
+		}); // searchSubject 끝!
+		
+		
+		
+		$('select[name="mySelect"]').on('change', function() {
+		   var selectedValue = $(this).val();
+		   console.log(selectedValue);
+		   // 추출한 값으로 원하는 동작 수행
+		});
+		
+	});
 </script>
 </html>

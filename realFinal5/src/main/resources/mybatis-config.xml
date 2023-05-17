@@ -14,6 +14,7 @@
   		<typeAlias alias="modifyboard" type="com.human.java.model.modifyBoardVO"/>
   		<typeAlias alias="know_Comment" type="com.human.java.model.CommentVO"/>
   		<typeAlias alias="bookmark" type="com.human.java.model.BookmarkVO"/>
+  		<typeAlias alias="page" type="com.human.java.model.PageVO"/>
   	</typeAliases>
   </configuration>
   
