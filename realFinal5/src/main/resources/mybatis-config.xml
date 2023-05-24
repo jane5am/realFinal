@@ -10,11 +10,16 @@
    -->  
   <configuration>
    	<typeAliases>
-  		<typeAlias alias="board" type="com.human.java.model.BoardVO"/>
-  		<typeAlias alias="modifyboard" type="com.human.java.model.modifyBoardVO"/>
-  		<typeAlias alias="know_Comment" type="com.human.java.model.CommentVO"/>
-  		<typeAlias alias="bookmark" type="com.human.java.model.BookmarkVO"/>
-  		<typeAlias alias="page" type="com.human.java.model.PageVO"/>
+  		<typeAlias alias="board" type="com.human.java.domain.BoardVO"/>
+  		<typeAlias alias="modifyboard" type="com.human.java.domain.modifyBoardVO"/>
+  		<typeAlias alias="know_Comment" type="com.human.java.domain.CommentVO"/>
+  		<typeAlias alias="bookmark" type="com.human.java.domain.BookmarkVO"/>
+  		<typeAlias alias="page" type="com.human.java.domain.PageVO"/>
+  		<typeAlias alias="member" type="com.human.java.domain.MemberVO"/>
+  		<typeAlias alias="studyBoard" type="com.human.java.domain.StudyBoardVO"/>
+  		<typeAlias alias="study_Comment" type="com.human.java.domain.StudyCommentVO"/>
+  		<typeAlias alias="saveTemp" type="com.human.java.domain.SaveTempVO"/>
+		<typeAlias type="com.human.java.domain.MemberVO" alias="member"/>
   	</typeAliases>
   </configuration>
   

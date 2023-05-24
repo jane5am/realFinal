@@ -9,7 +9,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>Insert title here</title>
+<title>지식 공유 게시판</title>
 <meta content="" name="description">
  <meta content="" name="keywords">
  
@@ -30,6 +30,7 @@
 
 <!-- Template Main CSS File -->
 <link href="resources/assets/css/style2.css" rel="stylesheet">
+<link href="resources/assets/css/style3.css" rel="stylesheet">
   
   <!-- 테이블 CSS -->
 <link href="resources/css/css.css" rel="stylesheet">
@@ -51,10 +52,10 @@
 
 			<nav id="navbar" class="navbar">
 				<ul>
-					<li><a class="nav-link scrollto active" href="getPostlist">지식게시판</a></li>
-					<li><a class="nav-link scrollto" href="#about">게시판</a></li>
-					<li><a class="nav-link scrollto" href="#services">Services</a></li>
-					<li><a class="nav-link   scrollto" href="#portfolio">Portfolio</a></li>
+		            <li><a class="nav-link scrollto active" href="getPostlist">지식게시판</a></li>
+		            <li><a class="nav-link scrollto" href="getStudyPostlist">스터디게시판</a></li>
+		            <li><a class="nav-link scrollto" href="stusyBoard_write.do">스터디게시판 글쓰기</a></li>
+		            <li><a class="nav-link scrollto" href="getBookmark">북마크</a></li>
 					<li><a class="nav-link scrollto" href="#team">Team</a></li>
 					<li class="dropdown"><a href="#"><span>Drop Down</span> <i
 							class="bi bi-chevron-down"></i></a>
@@ -91,29 +92,31 @@
         </div>
         
         <div class="board_write_wrap">
-	        <form action="savePost" >
+	        <form id="toSavePost" action="savePost" >
 	            <div class="board_write">
 	                <div class="title">
 	                    <dl>
-	                        <dt>제목</dt>
-	                        <dd><input type="hidden" name="R_SEQ"><input type="text" name="title"></dd>
+	                        <dt class="writeDT"> 제 목 </dt>
+	                        <dd><input type="hidden" name="R_SEQ"><input type="hidden" name="board_num" value="1"><input type="text" name="title"></dd>
 	                    </dl>
 	                </div>
 	                <div class="info">
 	                    <dl>
-	                        <dt>말머리</dt>
+	                        <dt class="writeDT">말머리</dt>
 	                        <dd>
 		                        <select name="subject" id="subject" size="1">
 									<option value="select" hidden="hidden">말머리를 선택하세요</option>
-								    <option value="nothing">선택안함</option>
-								    <option value="JavaScript">JavaScript</option>
-								    <option value="php">PHP</option>
-								    <option value="JAVA">JAVA</option>
-								    <option value="golang">Golang</option>
-								    <option value="python">Python</option>
-								    <option value="c#">C#</option>
-								    <option value="C++">C++</option>
-								    <option value="erlang">Erlang</option>
+									<option value='JavaScript'>JavaScript</option>
+									<option value='python'>python</option>
+									<option value='Java'>Java</option>
+									<option value='C/C++'>C/C++</option>
+									<option value='PHP'>PHP</option>
+									<option value='C#'>C#</option>
+									<option value='Swift'>Swift</option>
+									<option value='Kotlin'>Kotlin</option> 
+									<option value='Go'>Go</option> 
+									<option value='Ruby'>Ruby</option> 
+									<option value='그 외'>그 외</option> 
 								 </select>
 							 </dd>
 	                    </dl>
@@ -128,8 +131,32 @@
 	            </div>
 	            <div class="bt_wrap">
 					<button type="submit" class="on btn">등록</button>
-	                <button type="button" class="btn">임시저장</button>
+<!-- 	                <button type="button" data-oper="btn_temp_count" class="btn btn_temp_count">0</button> -->
+<!-- 	                <input type="button" class="modalScreen" value="모달창"> -->
+	                <button type="button" data-oper="btn_temp_count" class="btn btn_temp_count">0</button>
+	                <button type="button" data-oper="btn_temp_save" class="btn btn_temp_save">임시저장</button>
 	            </div>
+	            
+	            
+	            
+				<div class="modal">
+					<div class="modal_content" title="클릭하면 창이 닫힙니다.">
+						지식 공유게시판 임시글 <strong class="TempPostNum">0</strong>
+						<table class="tempListTable">
+							<tr>	
+								<td class="tempListTitle">글제목</td>		
+								<td class="tempListDate">날짜</td>		
+							</tr>
+						</table>
+					</div>
+				</div>
+				
+				<div class="modal2">
+					<div class="modal_content2">
+						작성한 글이 임시저장되었습니다.
+					</div>
+				</div>
+	            
             </form>
         </div>
     </div>
@@ -149,4 +176,128 @@
   
   
 </body>
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		let TempPostNumber = 0;
+// 		// FORM버튼 url 변경
+// 	    let formObj = $("form");
+// 	       $('.btn').on("click", function(e) {       //모든 button태그에 대한 클릭 이벤트 처리
+// 	          e.preventDefault();                //버튼의 기본 submit() 동작 막기
+// 	          let operation = $(this).data("oper");   //data-oper 값 읽어오기
+// 	          console.log(operation);
+	      
+// 	          if (operation == 'btn_temp_count') {
+// 	             if (confirm("임시저장글을 불러오시겠습니까?") == true) {
+// 	                formObj.attr("action", "btn_temp_count");
+// 	             } else {
+// 	                return false;
+// 	             }
+// 	          } else if (operation == 'btn_temp_save' ){
+// 	             if (confirm("임시저장 하시겠습니까?") == true) {
+// 	                formObj.attr("action", "saveTempPost");
+// 	             } else {
+// 	                return false;
+// 	             }
+// 	          }     
+// 	             else {
+// 	             formObj.attr("action", "savePost");
+// 	          }
+	         
+// 	          formObj.submit();
+// 	       })
+
+
+		
+		// 임시저장 갯수 변경
+			$.ajax( {
+				url : "countTempPost", 
+				data : { "board_num" : 1 },
+				type : "post",
+				//----------------------------------
+				success : function (ajaxData) { 
+				    $(".btn_temp_count").text(ajaxData);
+				    TempPostNumber = ajaxData;
+				},
+				error : function() {
+					alert('실패');
+				},
+			});
+
+		// 임시저장하기
+		 $('.btn_temp_save').click(function(){
+		
+	         $.ajax( {
+	        	  url : "saveTempPost", 
+	              data : $("#toSavePost").serialize(),
+	              type : "post",
+	            //----------------------------------
+	            success : function (ajaxData) { 
+	               console.log(TempPostNumber)
+	               TempPostNumber = TempPostNumber + 1;
+	               $(".btn_temp_count").text( ( TempPostNumber) );
+	               $(".modal2").fadeIn();
+	               
+	               setTimeout(function() {
+	                   $(".modal2").fadeOut();
+	                 }, 2700);
+	               
+	            },
+	            error : function() {
+	               alert('실패');
+	            },
+	         });
+		});
+
+	
+	
+	// 임시저장 리스트 목록 모달창 띄우기
+	  $(".btn_temp_count").click(function(){
+	    
+		    $.ajax({
+	            url : "getTempList", 
+	            data : { "board_num" : 1 },
+	            type : "post",
+	            //----------------------------------
+	            success : function (ajaxData) {
+	            	
+	               alert("목록가져오기 성공");
+	               console.log(ajaxData);
+	               
+	               $('.TempPostNum').text(TempPostNumber);
+		           	$.each(	ajaxData, function(	index, item) {  // 데이터 =item
+						console.log(index);
+						let tagHtml = "<tr>"
+									+ "<td>"+ ajaxData[index].title + "</td>"
+									+ "<td>"+ ajaxData[index].postingdate + "</td>"
+									+ "</tr>";
+						$('.tempListTable > tbody').append(tagHtml);
+	
+					});
+	               
+	               $(".modal").fadeIn();
+	               
+	               
+	             
+	               
+	            },
+	            error : function() {
+	               alert('실패');
+	            },
+	         });
+		});
+	  
+	  
+	  // 모달창 사라지기
+	  $(document).click(function(event) {
+		  var target = $(event.target);
+		  if (!target.closest('.modal_content').length) {
+		    $('.modal').fadeOut();
+		  }
+		});
+	  
+	});
+	
+</script>
 </html>

@@ -9,7 +9,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>Insert title here</title>
+<title>지식 공유 게시판</title>
 <meta content="" name="description">
  <meta content="" name="keywords">
  
@@ -38,6 +38,9 @@
 <script type="text/javascript"  src="http://code.jquery.com/jquery-1.9.0.js"></script>  
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
+<style type="text/css">
+
+</style>
 </head>
 
 <body>
@@ -53,10 +56,10 @@
 
          <nav id="navbar" class="navbar">
             <ul>
-               <li><a class="nav-link scrollto active" href="getPostlist">지식게시판</a></li>
-               <li><a class="nav-link scrollto" href="#about">게시판</a></li>
-               <li><a class="nav-link scrollto" href="#services">Services</a></li>
-               <li><a class="nav-link   scrollto" href="#portfolio">Portfolio</a></li>
+	          <li><a class="nav-link scrollto active" href="getPostlist">지식게시판</a></li>
+	          <li><a class="nav-link scrollto" href="getStudyPostlist">스터디게시판</a></li>
+	          <li><a class="nav-link scrollto" href="stusyBoard_write.do">스터디게시판 글쓰기</a></li>
+	          <li><a class="nav-link scrollto" href="getBookmark">북마크</a></li>
                <li><a class="nav-link scrollto" href="#team">Team</a></li>
                <li class="dropdown"><a href="#"><span>Drop Down</span> <i
                      class="bi bi-chevron-down"></i></a>
@@ -95,9 +98,13 @@
            <form method="post" id="frm">
                <div class="board_view">
                    <div class="title">
-                   		
-                      [<input type="text" name="subject" readonly="readonly" value="${board.subject}"/>]<input type="text" readonly="readonly" name="title" value="${board.title}">
+                      [<input type="text" name="subject" value="${board.subject}" id="subject" readonly="readonly"/>]
+                       <input type="text" readonly="readonly" name="title" value="${board.title}">
                    </div>
+                   
+                   <img alt="더보기" class="button_more" src="resources/assets/img/three-dots.png">
+                   <a href="moveModify?seq=${board.seq}" class="modButton" style="display: none;" >수 정</a>
+                   <a href="deletePost?seq=${board.seq}" class="delButton" style="display: none;" >삭 제</a>
                    <div class="info">
                        <dl>
                            <dt>번호</dt>
@@ -114,13 +121,14 @@
                        <dl>
                            <dt>조회</dt>
                            <dd><input type="text" value="${board.hits}" name="hits" readonly="readonly"> </dd>
+                  			 
                        </dl>
                    </div>
                    
                    <img alt="bookmark" src="resources/assets/img/bookmark.png" class="bookmarkImg">
                    
                    <div class="cont">
-                       <textarea name="content" readonly="readonly" class="textarea">${board.content}</textarea>
+                       <textarea name="content" readonly="readonly" class="textarea textareaDetail">${board.content}</textarea>
                    </div>
                </div>
                <div class="bt_wrap">
@@ -134,30 +142,63 @@
          
 	<strong class="commentCnt">🗨️ 댓글 0개</strong>
 
-	<table class="commentTable">
-      	
-		<tr class="writeCommentBox">
-			<td><input type="text" placeholder="닉네임" id="nickname"></td>
-			<td><input type="text" placeholder="댓글을 남겨보세요" id="commentContent"></td>
-			<td></td>
-			<td></td>
-			<td><input type="submit" class="writeComment btn" data-oper= "writeComment" value="작성"></td>
-		</tr>
-	         
-			<c:forEach items="${commentList}" var="comment">
-				<tr>
-					<td><input type="hidden" value="${comment.comment_id }"> ${comment.nickname }</td>
-					<td> ${comment.comment_content }</td>
-					<td><fmt:formatDate value="${comment.comment_date }" pattern="yyyy-MM-dd"/></td>
-				    <td><input type="button" class="commentMod" value="수정"></td>
-				    <td><input type="button" class="commentDel" value="삭제"></td>
-				</tr>
-	        </c:forEach>
-	</table>
+	<div class="commentTable">
+	
+		<div class="writeCommentBox">
+			<input type="text" value="닉네임" id="nickname" readonly="readonly">
+			<input type="text" placeholder="댓글을 남겨보세요" id="commentContent"></input>
+				<input type="submit" class="writeComment btn" data-oper= "writeComment" value="작성">
+			<div>
+<!-- 				<img alt="" src="resources/assets/img/bookmark.png" style="width: 15px"> -->
+				😀 
+<!-- 				<img alt="" src="resources/assets/img/bookmark.png" style="width: 15px"> -->
+				📷
+			</div>
+		</div>
+		
+	
+		<c:forEach items="${commentList}" var="comment">
+			<div class="viewCommentContentBox">
+				<img alt="프로필사진" src="resources/assets/img/bookmark.png" class="profilePicture " style="width: 36px">
+				<input type="hidden" value="${comment.comment_id }" class="commentID">
+				<input type="text" value="${comment.nickname }" id="nicknameView" readonly="readonly">
+				<div class="viewCommentContentBox">
+					<input type="text" class="viewContent" value="${comment.comment_content }" readonly="readonly" >
+					<span class="viewDate"><fmt:formatDate value="${comment.comment_date }" pattern="yyyy-MM-dd"/></span>
+					<span class="comment_info_button">답글 쓰기</span>
+					<input type="button" class="commentMod" value="수정">
+					<input type="button" class="commentDel" value="삭제">
+				</div>
+			</div>
+			
+        </c:forEach>
+	        
+	</div>
+	
+	
+	
+<!-- 		<tr class="writeCommentBox"> -->
+<!-- 			<td><input type="text" placeholder="닉네임" id="nickname"></td> -->
+<!-- 			<td><input type="text" placeholder="댓글을 남겨보세요" id="commentContent"></td> -->
+<!-- 			<td></td> -->
+<!-- 			<td></td> -->
+<!-- 			<td><input type="submit" class="writeComment btn" data-oper= "writeComment" value="작성"></td> -->
+<!-- 		</tr> -->
+		
+<!-- 		<tr class="writeCommentBox"> -->
+			
+<!-- 		</tr> -->
+<%-- 			<c:forEach items="${commentList}" var="comment"> --%>
+<!-- 				<tr> -->
+<%-- 					<td><input type="hidden" value="${comment.comment_id }"> ${comment.nickname }</td> --%>
+<%-- 					<td> ${comment.comment_content }</td> --%>
+<%-- 					<td><fmt:formatDate value="${comment.comment_date }" pattern="yyyy-MM-dd"/></td> --%>
+<!-- 				    <td><input type="button" class="commentMod" value="수정"></td> -->
+<!-- 				    <td><input type="button" class="commentDel" value="삭제"></td> -->
+<!-- 				</tr> -->
+<%-- 	        </c:forEach> --%>
+<!-- 	</table> -->
         
-	
-	
-	
 
 <!--   Vendor JS Files -->
   <script src="resources/assets/vendor/aos/aos.js"></script>
@@ -181,62 +222,116 @@
 
 $(document).ready(function() {
    
+// 	function myFucntion(){
+// 		const recruitmentInput = document.getElementById('subject');
+// 		recruitmentInput.addEventListener('change', function() {
+// 			alert('움직여라');
+// 		this.size = this.value.length;
+// 		});
+//  	 }
+
+	// 댓글 갯수 실시간 업데이트
+	  // 초기 개수 설정
+	  updateCommentCount();
+	  // MutationObserver를 사용하여 요소 변경 감지
+	  var observer = new MutationObserver(function(mutations) {
+	    updateCommentCount();
+	  });
+	  // 감지할 대상 요소 설정
+	  var target = document.querySelector('.commentTable');
+	  // MutationObserver 시작
+	  observer.observe(target, { childList: true, subtree: true });
+	  // 개수 업데이트 함수
+	  function updateCommentCount() {
+	    var count = $(".viewCommentContentBox").length;
+	    $(".commentCnt").text("🗨️ 댓글 " + count/2 + "개");
+	  }
 	
-// 	//페이징
-// 	let groupNo = 1;
-// 	let pGroup = request.getParameter("group");
-// 	if( pGroup != null ) {
-// 		groupNo = Integer.parseInt(pGroup);
-// 	}
-	
-// 	let countPerGroup = 5; // 한 그룹에 보여줄 페이지 번호 (5페이지씩)
-// 	let totalPageCount = listService.getTotalPage(); // 페이지의 총 갯수
 	
 	
 	
+	// 더보기(점세개) 버튼 눌렀을 때
+	  $(".button_more").click(function() { 
+		    $(".modButton, .delButton").each(function() {
+		      $(this).toggle();
+		      if ($(this).css("display") === "none") {
+		        $(this).attr("style", "display: none;");
+		      } else {
+		        $(this).removeAttr("style");
+		      }
+		    });
+	  });
 	
 	
 	
-    let formObj = $("form");
-       $('.btn').on("click", function(e) {       //모든 button태그에 대한 클릭 이벤트 처리
-          e.preventDefault();                //버튼의 기본 submit() 동작 막기
-          let operation = $(this).data("oper");   //data-oper 값 읽어오기
-          console.log(operation);
-      
-          if (operation == 'deletePost') {
-             if (confirm("게시글을 삭제하시겠습니까?") == true) {
-                alert("게시글이 삭제되었습니다.");
-                formObj.attr("action", "deletePost");
-             } else {
-                return false;
-             }
-          } else if (operation == 'moveModify' ){
-             if (confirm("게시글을 수정하시겠습니까?") == true) {
-                formObj.attr("action", "moveModify");
-             } else {
-                return false;
-             }
-          } else if (operation == 'writeComment' ){
-//              if (confirm("댓글을 등록하시겠습니까?") == true) {
-                formObj.attr("action", "writeComment");
-                return;
-//              } else {
-//                 return false;
-//              }
-          }       else if (operation == 'modifyComment' ){
-//            if (confirm("댓글을 등록하시겠습니까?") == true) {
-//               formObj.attr("action", "writeComment");
-              return;
-//            } else {
-//               return false;
-//            }
-        }       
-             else {
-             formObj.attr("action", "getPostlist");
-          }
+		// FORM버튼 url 변경
+	    let formObj = $("form");
+	       $('.btn').on("click", function(e) {       //모든 button태그에 대한 클릭 이벤트 처리
+	          e.preventDefault();                //버튼의 기본 submit() 동작 막기
+	          let operation = $(this).data("oper");   //data-oper 값 읽어오기
+	          console.log(operation);
+	      
+	          if (operation == 'deletePost') {
+	             if (confirm("게시글을 삭제하시겠습니까?") == true) {
+	                alert("게시글이 삭제되었습니다.");
+	                formObj.attr("action", "deletePost");
+	             } else {
+	                return false;
+	             }
+	          } else if (operation == 'moveModify' ){
+	             if (confirm("게시글을 수정하시겠습니까?") == true) {
+	                formObj.attr("action", "moveModify");
+	             } else {
+	                return false;
+	             }
+	          } else if (operation == 'writeComment' ){
+//	              if (confirm("댓글을 등록하시겠습니까?") == true) {
+	                formObj.attr("action", "writeComment");
+	                return;
+//	              } else {
+//	                 return false;
+//	              }
+	          }       else if (operation == 'modifyComment' ){
+	           if (confirm("댓글을 수정하시겠습니까?") == true) {
+	              formObj.attr("action", "writeComment");
+	              return;
+	           } else {
+	              return false;
+	           }
+	        }       
+	             else {
+	             formObj.attr("action", "getPostlist");
+	          }
+	         
+	          formObj.submit();
+	       })
+	       
+	       
+	// 북마크 기능
+	let seq = $('#seq').val();
+	var imgSrc = $(this).attr("src");
+	
+	 $.ajax( {
+     	 url : "checkBookmark", // 여기서 "ajax"는 컨트롤러에 있던 @RequestMapping("ajax")의 ajax이다
+         data : { "seq" : seq },
+         type : "post",
+         //----------------------------------
+         success : function (ajaxData) { // ajaxData : 그냥 아무 변수명을 쓰면된다, 뭐 data라고 써도되고
+			 alert(ajaxData);         
+              
+	         if ( ajaxData == 1  ){
+// 	           	console.log('북마크되어있지 않은 게시물');
+	         }else {
+// 	        	console.log('북마크되어있는 게시물');
+		          $('.bookmarkImg').attr("src", "resources/assets/img/bookmarkOn.png");
+	         }
+         },
+         error : function() {
+             alert('실패');
+         },
+      });
          
-          formObj.submit();
-       })
+	
       
       
       
@@ -261,14 +356,8 @@ $(document).ready(function() {
          console.log(seq);
          
          let inputData = { "nickname" : nickname , "comment_content" : commentContent, "seq" : seq }; // 미리 배열을 변수화 해둔 것
-         //FORM에서는 input태그안에 아무것도 입력하지 않으면 null로 떴었는데 AJAX에서는 그냥 공백("")으로 뜨나봐 , 이걸 가지고 DB까지 갔을 때 쿼리를 다시 짜줘야지
-         
-         // 에이젝스에서 컨트롤러의 vo에 자동으로 값을 넣으려면 
-         // "키" : 값 에서 "키"를 vo의 변수명과 맞춰주면 된다
-         
-         // 작은 form태그라고 생각해라 - 실행이되면 나오는 결과를 success로 표현
+
          $.ajax( {
-            //url : 우리 form태그에 있던 action과 같은 기능, 내가 접속하려고 하는 페이지의 맵핑명, controller에 있는 맵핑명
             url : "writeComment", // 여기서 "ajax"는 컨트롤러에 있던 @RequestMapping("ajax")의 ajax이다
             data : inputData,
             type : "post",
@@ -291,18 +380,32 @@ $(document).ready(function() {
                   $.each(ajaxData['jsonList'], function(index, item) { // 데이터 =item
                      console.log("얍" + ajaxData['jsonList'][index]['comment_content']); 
                      
-                        let tagHtml = "<tr>"+
-                       "<td>"+ "<input type='hidden' id='comment_id' value='"+ ajaxData['jsonList'][index]['comment_id'] + "'>" +ajaxData['jsonList'][index]['nickname']+"</td> "+
-                         "<td>"+ ajaxData['jsonList'][index]['comment_content'] +"</td> "+
-                         "<td>"+ ajaxData['jsonList'][index]['comment_date'] +"</td> "+
-                         "<td><input type='button' class='commentMod' value='수정'></td> "+
-                         "<td><input type='button' class='commentDel' value='삭제'></td> "+
-                       "</tr>";
+//                         let tagHtml = "<tr>"+
+//                        "<td>"+ "<input type='hidden' id='comment_id' value='"+ ajaxData['jsonList'][index]['comment_id'] + "'>" +ajaxData['jsonList'][index]['nickname']+"</td> "+
+//                          "<td>"+ ajaxData['jsonList'][index]['comment_content'] +"</td> "+
+//                          "<td>"+ ajaxData['jsonList'][index]['comment_date'] +"</td> "+
+//                          "<td><input type='button' class='commentMod' value='수정'></td> "+
+//                          "<td><input type='button' class='commentDel' value='삭제'></td> "+
+//                        "</tr>";
                            
-                        $('.commentTable > tbody').append(tagHtml);
+//                         $('.commentTable > tbody').append(tagHtml);
+
+                        let tagHtml = 
+                        	
+                       "<div class='viewCommentContentBox'>" +
+                       "<img alt='프로필사진' src='resources/assets/img/bookmark.png' class='profilePicture' style='width: 36px'>"+
+                       "<input type='hidden' value='" + ajaxData['jsonList'][index]['comment_id'] + "'>"+
+                       "<input type='text' value='" + ajaxData['jsonList'][index]['nickname']+"' id='nicknameView'>"+
+                       "<div class='viewCommentContentBox'>"+
+                       "<input type='text' class='viewContent' value=' " + ajaxData['jsonList'][index]['comment_content'] + "' readonly='readonly' >"+
+                       "<span class='viewDate'>" + ajaxData['jsonList'][index]['comment_date'] + "</span> " +
+                       "<span class='comment_info_button'>답글 쓰기</span>" +
+                       "<input type='button' class='commentMod' value='수정' style='margin-left: 3px'> " +
+                       "<input type='button' class='commentDel' value='삭제' style='margin-left: 3px'>" +
+                       "</div>" + "</div>" ;
+                        $('.commentTable').append(tagHtml);
                   });
                   
-                  $('#nickname').val('');
                   $('#commentContent').val('');
                
             },
@@ -318,28 +421,27 @@ $(document).ready(function() {
 			          
 	        // 수정 버튼 클릭 시
 			  $(document).on('click', '.commentMod', function() {
+				  
 			    // 해당 댓글의 내용과 id 가져오기
-			    var commentContent = $(this).closest('tr').find('td:eq(1)').text().trim();
-			    var commentId = $(this).closest('tr').find('td:eq(0) input[type=hidden]').val();
+			    var commentContent = $(this).prev().prev().prev().val().trim();
+			    var comment_id = $(this).parent().prev().prev().val();
 			    
-			    // 댓글 내용을 input 태그로 변경
-			    $(this).closest('tr').find('td:eq(1)').html('<input type="text" class="commentContentInput" value="'+ commentContent +'">');
+			    // 댓글 내용의 readonly해제
+			    $(this).prev().prev().prev().attr('readonly', false);
 			    
 			    // 버튼 변경
 			    $(this).val('등록').removeClass('commentMod').addClass('commentSubmit');
-			    $(this).closest('tr').find('.commentDel').val('취소').removeClass('commentDel').addClass('commentCancel');
+			    $(this).next().val('취소').removeClass('commentDel').addClass('commentCancel');
 			 
 			    // 취소 버튼 클릭 시
 				  $(document).on('click', '.commentCancel', function() {
 				    // 원래 댓글 내용 가져오기
-				    var commentModContent = $(this).closest('tr').find('td:eq(1) input[type=text]').val();
-				     console.log(commentContent);
-				    // 댓글 내용 원상복구
- 					$(this).closest('tr').find('td:eq(1)').text(commentContent).find('input').prop('readonly', true);
+				    $(this).prev().prev().prev().prev().val(commentContent);
+				    $(this).prev().prev().prev().prev().attr('readonly', true);
 				    
 				    // 버튼 변경
-				    $(this).closest('tr').find('.commentSubmit').val('수정').removeClass('commentSubmit').addClass('commentMod');
-				    $(this).val('삭제').removeClass('commentCancel').addClass('commentDel');
+				    $(this).prev().val('수정').removeClass('commentSubmit').addClass('commentMod');
+				    $(this).val('삭제').removeClass('commentDel').addClass('commentDel');
 				  }); // 취소 버튼 클릭 시 끝
 				    
 			  }); // 수정 버튼 클릭 시 끝
@@ -349,15 +451,16 @@ $(document).ready(function() {
 			  $(document).on('click', '.commentSubmit', function() {
 				 	alert('등록 해써요');
 				    // 수정된 댓글 내용과 id 가져오기
-				    var comment_content = $(this).closest('tr').find('td:eq(1) input[type=text]').val();
-				    var comment_id = $(this).closest('tr').find('td:eq(0) input[type=hidden]').val();
+				    var comment = $(this).prev().prev().prev();
+				    var comment_content = $(this).prev().prev().prev().val();
+				    var comment_id = $(this).parent().prev().prev().val();
 				    console.log(comment_content);
 				    console.log(comment_id);
 				    
 			        
 			        // 버튼 되돌리기
-				    $(this).closest('tr').find('.commentCancel').val('삭제').removeClass('commentCancel').addClass('commentDel');
-			        $(this).val('수정').removeClass('commentSubmit').addClass('commentMod');
+			   		$(this).val('수정').removeClass('commentSubmit').addClass('commentMod');
+					$(this).next().val('삭제').removeClass('commentCancel').addClass('commentDel');
 				    
 				    // 서버로 수정된 댓글 내용과 id 전송
 				    $.ajax({
@@ -368,50 +471,43 @@ $(document).ready(function() {
 				    	  alert("성공");
 				    	  console.log(ajaxData);
 				          // 수정된 댓글 내용으로 변경
-				         $(this).closest('tr').find('td:eq(1) input[type=text]').val(comment_content);
-// 				          console.log($(this).parents('tr').find('td:eq(1)').find('input').prop(readonly, true));
 				          
+				        comment.attr("readonly", true);
+				        
 				      },
 				      error: function(xhr, status, error) {
 				    	  alert('실패');
 				        console.error(error);
 				      }
 				    });
-			  });
+		  });
 			  
           
       
       //댓글 삭제
       $("body").on("click",".commentDel", function(){
            
-          var comment_id = $(this).parent().siblings('td').eq(0).children('input').val();
+    	  var comment_id = $(this).parent().prev().prev().val();
+    	  var comment = $(this).parent().parent();
+          console.log("내가 선택한 것의 코멘트 아이디 : " + comment_id);
           
-          console.log(comment_id);
             $.ajax( {
                url : "deleteComment",
                data : { "comment_id" : comment_id },
                type : "post",
+               dataType : 'json',
                //----------------------------------
                success : function (ajaxData) {
-                  console.log(ajaxData);
-                  
-                     let str = JSON.stringify(ajaxData); // <> parse()
-                     console.log(str); 
-                     console.log(comment_id); 
-
-//                      location.reload();
-                     $('tr').each(function() {
-                    	    if ($(this).find('input[type=hidden]').val() == comment_id) {
-                    	      $(this).remove();
-                    	    }
-                  	  });
+            	   
+                    	 comment.remove();
+                     
                },
                error : function() {
                   alert('실패');
                },
             });
       }); // 댓글 삭제 끝
-      
+       
       
       
       // 북마크 기능
@@ -457,6 +553,43 @@ $(document).ready(function() {
 			
          });
             
+      
+      
+      
+      
+      // 말머리 input크기 조절
+		var subjectValue = "${board.subject}";
+
+		// 너비 조정 함수
+		function adjustWidth() {
+		  var inputElement = document.getElementById("subject");
+		  
+		  // board.subject 값에 따라 너비 조정
+		  if (subjectValue === "JavaScript") {
+		    inputElement.style.width = "105px";
+		  } else if (subjectValue === "python","") {
+		    inputElement.style.width = "75px";
+		  } else if (subjectValue === "C/C++") {
+		    inputElement.style.width = "75px";
+		  } else if (subjectValue === "C/C++") {
+		    inputElement.style.width = "75px";
+		  } else if (subjectValue === "C#") {
+		    inputElement.style.width = "36px";
+		  } else if (subjectValue === "Go") {
+		    inputElement.style.width = "36px";
+		  } else if (subjectValue === "Kotlin") {
+		    inputElement.style.width = "60px";
+		  } else {
+		    inputElement.style.width = "45px";
+		  }
+		}
+
+		// 초기 너비 설정
+		adjustWidth();
+
+		// 이벤트 리스너 등록
+		document.getElementById("subject").addEventListener("input", adjustWidth);
+      
       
       
    })// script전체 끝

@@ -9,7 +9,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>지식 공유 게시판</title>
+<title>스터디 & 모임 게시판</title>
 <meta content="" name="description">
  <meta content="" name="keywords">
  
@@ -57,10 +57,10 @@
 
 			<nav id="navbar" class="navbar">
 				<ul>
-		            <li><a class="nav-link scrollto active" href="getPostlist">지식게시판</a></li>
-		            <li><a class="nav-link scrollto" href="getStudyPostlist">스터디게시판</a></li>
-		            <li><a class="nav-link scrollto" href="stusyBoard_write.do">스터디게시판 글쓰기</a></li>
-		            <li><a class="nav-link scrollto" href="getBookmark">북마크</a></li>
+        			<li><a class="nav-link scrollto active" href="getPostlist">지식게시판</a></li>
+        			<li><a class="nav-link scrollto" href="getStudyPostlist">스터디게시판</a></li>
+        			<li><a class="nav-link scrollto" href="stusyBoard_write.do">스터디게시판 글쓰기</a></li>
+        			<li><a class="nav-link scrollto" href="getBookmark">북마크</a></li>
 					<li><a class="nav-link scrollto" href="#team">Team</a></li>
 					<li class="dropdown"><a href="#"><span>Drop Down</span> <i
 							class="bi bi-chevron-down"></i></a>
@@ -91,7 +91,7 @@
 	<!-- End Header -->
 	
 	<div class="board_wrap">
-
+<!-- 		<input type="hidden" name="board_id" value="2"> -->
 		<div class="serchForm" >
 			<select class="search boardSearch">
 				<option value='title'>제목</option>
@@ -102,33 +102,25 @@
 			<input type="text" name="searchKeyword" class="searchBox" />
 			<input type="submit" value="검색" class="knowBLsearchBtn" />
 		</div>
-		
+
 		<section>
 
 	         <div class="board_title">
-	            <strong>지식 공유 게시판</strong>
-	            <p>지식을 공유하고 새로운 아이디어를 얻어보세요!</p>
+	            <strong>스터디 & 모임 게시판</strong>
+	            <p>개발과 관련된 공통 주제나 관심사로 사람을 모아보세요!</p>
 	        </div>
 
 			<div class="tbl-header">
 				<table class="tbl_1">
 					<tr>
 						<th class="subjectTH">
-						<select name="selectBox" class="selectBox">
-								<option value='subject' hidden="hidden">말머리</option>
-								<option value='all'>전체보기</option>
-								<option value='JavaScript'>JavaScript</option>
-								<option value='python'>python</option>
-								<option value='Java'>Java</option>
-								<option value='C/C++'>C/C++</option>
-								<option value='PHP'>PHP</option>
-								<option value='C#'>C#</option>
-								<option value='Swift'>Swift</option>
-								<option value='Kotlin'>Kotlin</option> 
-								<option value='Go'>Go</option> 
-								<option value='Ruby'>Ruby</option> 
-								<option value='그 외'>그 외</option> 
-						</select></th>
+							<select name="selectBox" class="selectBox">
+									<option value='recruitment' hidden="hidden">모집 상태</option>
+									<option value='all'>전체보기</option>
+									<option value='모집중'>모집중</option>
+									<option value='마감'>마감</option>
+							</select>
+						</th>
 						<th>제목</th>
 						<th>작성자</th>
 						<th>등록일</th>
@@ -144,24 +136,18 @@
 					<c:forEach items="${boardList}" var="board">
 						<tr class="currentList subjectTH">
 							<td>${board.seq }</td>
-							<td align="left">
-								<a href="getBoard.do?seq=${board.seq}">
-									<div class="subjectS">[${board.subject}]</div> ${board.title }
-								</a>
-							</td>
+							<td align="left"><div class="subjectS"><a href="geStudytBoard.do?seq=${board.seq}">[${board.recruitment}]</div>  ${board.title }</a></td>
 							<td>${board.writer }</td>
-							
-							<td>
-							  <c:choose>
-							    <c:when test="${board.postingdate < today}">
-							      <fmt:formatDate value="${board.postingdate}" pattern="yyyy-MM-dd" />
-							    </c:when>
-							    <c:otherwise>
-							      <fmt:formatDate value="${board.postingdate}" pattern="HH:mm" />
-							    </c:otherwise>
-							  </c:choose>
+							<td>${board.postingdate }
+<%-- 							  <c:choose> --%>
+<%-- 							    <c:when test="${board.postingdate < today}"> --%>
+<%-- 							      <fmt:formatDate value="${board.postingdate}" pattern="yyyy-MM-dd" /> --%>
+<%-- 							    </c:when> --%>
+<%-- 							    <c:otherwise> --%>
+<%-- 							      <fmt:formatDate value="${board.postingdate}" pattern="HH:mm" /> --%>
+<%-- 							    </c:otherwise> --%>
+<%-- 							  </c:choose> --%>
 							</td>
-							
 							<td>${board.hits }</td>
 						</tr>
 					</c:forEach>
@@ -173,19 +159,19 @@
 				<div class="board_page">
 					<c:choose>
 						<c:when test="${pageInfoVO.groupNum > 1}">
-						 	<a href="getPostlist?pageNum=${pageInfoVO.startGroup-1}&amp;groupNum=${pageInfoVO.groupNum-1}" class="bt first"> ◀ </a>
+						 	<a href="getStudyPostlist?pageNum=${pageInfoVO.startGroup-1}&amp;groupNum=${pageInfoVO.groupNum-1}" class="bt first"> ◀ </a>
 						</c:when>
 						<c:otherwise>
 						 	<a class="bt first" style="pointer-events: none;" > ◀ </a>
 						</c:otherwise>
 					</c:choose>
 					<c:forEach var="i" begin="${pageInfoVO.startGroup}" end="${pageInfoVO.endGroup}" >
-						<a href="getPostlist?pageNum=${i}&amp;groupNum=${pageInfoVO.groupNum}" class="num">${i}</a>
+						<a href="getStudyPostlist?pageNum=${i}&amp;groupNum=${pageInfoVO.groupNum}" class="num">${i}</a>
 						
 					</c:forEach>  
 						<c:choose>
 						<c:when test="${pageInfoVO.groupNum < pageInfoVO.totalGroup}">
-						 	<a href="getPostlist?pageNum=${pageInfoVO.endGroup+1}&amp;groupNum=${pageInfoVO.groupNum+1}" class="bt last"> ▶ </a>
+						 	<a href="getStudyPostlist?pageNum=${pageInfoVO.endGroup+1}&amp;groupNum=${pageInfoVO.groupNum+1}" class="bt last"> ▶ </a>
 						</c:when>
 						<c:otherwise>
 						 	<a class="bt last" style="pointer-events: none;"> ▶ </a>
@@ -196,7 +182,7 @@
 		</c:if>
 	
 			
-			<form action="knowBoard_write.do" method="post" class="write bt_wrap">
+			<form action="stusyBoard_write.do" method="post" class="write bt_wrap">
 				<input type="submit" value="글 쓰기" name="write" class="btn on">
 			</form>
 
@@ -222,13 +208,12 @@
 		// 말머리 검색
 		$(".selectBox").on("change", function() {
 
-			var selectedSubject = $(this).val();
-			console.log(selectedSubject);
+			var selectedRecruitment = $(this).val();
+			console.log(selectedRecruitment);
 	
 			$.ajax({
-				url : "searchSubject", // 여기서 "ajax"는 컨트롤러에 있던 @RequestMapping("ajax")의 ajax이다
-				data : { "selectedSubject" : selectedSubject },
-// 				data : $('.board_wrap').serialize(),
+				url : "searchStudySubject", // 여기서 "ajax"는 컨트롤러에 있던 @RequestMapping("ajax")의 ajax이다
+				data : { "selectedRecruitment" : selectedRecruitment },
 				type : "post",
 				dataType : 'json',
 				//----------------------------------
@@ -238,16 +223,18 @@
 					$('.currentList').remove();
 					$.each(	ajaxData['jsonList'], function(	index, item) { // 데이터 =item
 						console.log(index);
+						
 						let tagHtml = "<tr class='currentList subjectTH'>"
-									+ "<td>"+ ajaxData['jsonList'][index]['seq']+ "</td>"
-									+ "<td align='left'>"+ "<a href='getBoard.do?seq="+ ajaxData['jsonList'][index]['seq']+ "'>"+ "<div class='subjectS'>["+ ajaxData['jsonList'][index]['subject']+ "] </div>"
-									+ ajaxData['jsonList'][index]['title'] + "</a>"	+ "</td>" + "<td>"+ ajaxData['jsonList'][index]['writer']+ "</td> "	
-									+ "<td>"+ ajaxData['jsonList'][index]['postingdate']+ "</td> "
-									+ "<td>"+ ajaxData['jsonList'][index]['hits']+ "</td> "
-									+ "</tr>";
-	// 					let tagHtml = "<tr class='currentList'></tr>";
-					$('.tbl_1 > tbody').append(tagHtml);
-
+							+ "<td>"+ ajaxData['jsonList'][index]['seq']+ "</td>"
+							+ "<td align='left'>"+ "<a href='geStudytBoard.do?seq="+ ajaxData['jsonList'][index]['seq']+ "'>"+ "<div class='subjectS'>["+ ajaxData['jsonList'][index]['recruitment']+ "] </div>"
+							+ ajaxData['jsonList'][index]['title'] + "</a>"	+ "</td>" 
+							+ "<td>"+ ajaxData['jsonList'][index]['writer']+ "</td> "	
+							+ "<td>"+ ajaxData['jsonList'][index]['postingdate']+ "</td> "
+							+ "<td>"+ ajaxData['jsonList'][index]['hits']+ "</td> "
+							+ "</tr>";
+									 
+						$('.tbl_1 > tbody').append(tagHtml);
+	
 					});
 				}, error : function() { 
 					alert('실패');
@@ -265,8 +252,7 @@
 		   console.log(keyword);
 		   
 			$.ajax({
-				//url : 우리 form태그에 있던 action과 같은 기능, 내가 접속하려고 하는 페이지의 맵핑명, controller에 있는 맵핑명
-				url : "knowBLsearch", // 여기서 "ajax"는 컨트롤러에 있던 @RequestMapping("ajax")의 ajax이다
+				url : "studyBLsearch", // 여기서 "ajax"는 컨트롤러에 있던 @RequestMapping("ajax")의 ajax이다
 				data : { "type" : type, "keyword" : keyword },
 				type : "post",
 				//----------------------------------
@@ -276,15 +262,16 @@
 					
 					$.each(	ajaxData, function(	index, item) {  // 데이터 =item
 						console.log(index);
-						let tagHtml = "<tr class='currentList subjectTH'>"
-									+ "<td>"+ ajaxData[index].seq + "</td>"
-									+ "<td align='left'>"+ "<a href='getBoard.do?seq="+ ajaxData[index].seq + "'>"+ "<div class='subjectS'>["+ ajaxData[index].subject + "] </div>"
-									+ ajaxData[index].title + "</a>"	+ "</td>" + "<td>"+ ajaxData[index].writer + "</td> "	
-									+ "<td>"+ ajaxData[index].postingdate + "</td> "
-									+ "<td>"+ ajaxData[index].hits + "</td> "
-									+ "</tr>";
-	// 					let tagHtml = "<tr class='currentList'></tr>";
-					$('.tbl_1 > tbody').append(tagHtml);
+
+							let tagHtml = "<tr class='currentList subjectTH'>"
+								+ "<td>"+ ajaxData[index].seq + "</td>"
+								+ "<td align='left'>"+ "<a href='geStudytBoard.do?seq=" + ajaxData[index].seq + "'>"+ "<div class='subjectS'>["+ ajaxData[index].recruitment + "] </div>"
+								+ ajaxData[index].title + "</a>"	+ "</td>" 
+								+ "<td>"+ ajaxData[index].writer + "</td> "	
+								+ "<td>"+ ajaxData[index].postingdate + "</td> "
+								+ "<td>"+ ajaxData[index].hits + "</td> "
+								+ "</tr>";	
+						$('.tbl_1 > tbody').append(tagHtml);
 	
 					});
 					
@@ -293,8 +280,6 @@
 				},
 			});
 		});
-		
-		
 	});
 </script>
 </html>

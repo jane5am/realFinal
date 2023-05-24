@@ -44,9 +44,9 @@
       <nav id="navbar" class="navbar">
         <ul>
           <li><a class="nav-link scrollto active" href="getPostlist">지식게시판</a></li>
-          <li><a class="nav-link scrollto" href="#about">게시판</a></li>
-          <li><a class="nav-link scrollto" href="qnaInDetail.do">Services</a></li>
-          <li><a class="nav-link scrollto" href="#portfolio">Portfolio</a></li>
+          <li><a class="nav-link scrollto" href="getStudyPostlist">스터디게시판</a></li>
+          <li><a class="nav-link scrollto" href="stusyBoard_write.do">스터디게시판 글쓰기</a></li>
+          <li><a class="nav-link scrollto" href="getBookmark">북마크</a></li>
           <li><a class="nav-link scrollto" href="#team">Team</a></li>
           <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
             <ul>

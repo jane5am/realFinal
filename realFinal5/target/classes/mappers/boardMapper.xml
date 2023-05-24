@@ -71,23 +71,76 @@
 			WHERE seq = #{seq}
 	  	</select>
 
-		<!-- 글 목록보기 --> 
-<!-- 	<select id="getPostlist" parameterType="board" resultType="board"> -->
+	<!-- 글 목록보기 -->
+<!-- 	<select id="getPostlist2" parameterType="board" resultType="board"> -->
 <!-- 		SELECT * -->
 <!-- 		 FROM write_KnowBoard -->
 <!-- 		 WHERE state = 'Y' -->
 <!-- 		ORDER BY seq DESC -->
 <!-- 	</select> -->
-   	 
-   	 <select id="getPostlist" parameterType="board" resultType="board">
+	
+	<!-- 글 목록보기 페이징 / 오라클 limit-->
+	<select id="getPostlistPaging" parameterType="board" resultType="board">
 		SELECT *
-		FROM write_KnowBoard
-		WHERE SEQ = #{seq} IN ( SELECT seq FROM rownum as rnum, seq 
-								(SELECT seq FROM ORDER BY seq desc)
-								WHERE rnum BETWEEN)
-		ORDER BY SEQ DESC
+		 FROM  (
+		 	SELECT rownum as rn, e.*
+		 	FROM (
+		 		SELECT *
+				 FROM write_KnowBoard
+				 WHERE state = 'Y'
+				ORDER BY seq DESC
+		 	)e
+		 	
+		 ) 
+		 WHERE rn BETWEEN #{startPage} AND #{endPage}
 	</select>
 	
+	<!-- 글 전체보기 페이징X-->
+	<select id="getPostlist" parameterType="String" resultType="board">
+ 		SELECT *
+		 FROM write_KnowBoard
+		 WHERE state = 'Y'
+		<choose>
+			<when test="_parameter.equals('another')">
+			AND subject NOT IN ( 'JavaScript', 'python', 'C/C++', 'Java', 'PHP', 'C#', 'Visual development tools', 'Swift','Kotlin','Go' ,'Ruby')
+			</when>
+			<otherwise>
+			AND subject = #{value}
+			</otherwise>
+		</choose>
+		ORDER BY seq DESC
+	</select>
+	
+	<!-- 글 전체보기 페이징X - 말머리검색 전체 보기-->
+	<select id="getPostlistAll" parameterType="board" resultType="board">
+ 		SELECT *
+		 FROM write_KnowBoard
+		 WHERE state = 'Y'
+		ORDER BY seq DESC
+	</select>
+	
+	<!-- getBoardListCount / totalCount 이렇게 별칭쓰면 자동으로 vo에 들어가게 해줌-->
+   	 <select id="getBoardListCount" resultType="page">
+   		 SELECT count(*) AS totalCount FROM write_KnowBoard
+   	 </select>
+   	 
+   	 <!-- 지식게시판 - 글 검색하기 페이징 -->
+	<select id="knowBLsearch" parameterType="hashmap" resultType="board">
+		SELECT * 
+		 FROM write_KnowBoard
+		 WHERE state = 'Y'
+			<if test=" searchtype eq 'title'.toString()">
+			 AND ( title like '%${keyword}%' OR title like UPPER('%${keyword}%') OR title like LOWER('%${keyword}%') )
+			</if>
+			<if test=" searchtype eq 'content'.toString()">
+			 AND ( content like '%${keyword}%' OR content like UPPER('%${keyword}%') OR content like LOWER('%${keyword}%') )
+			</if>
+			<if test=" searchtype eq 'writer'.toString()">
+			 AND ( writer like '%${keyword}%' OR writer like UPPER('%${keyword}%') OR writer like LOWER('%${keyword}%') )
+			</if>
+		 ORDER BY seq DESC
+	</select>
+   	 
    	<!-- 글 상세보기 -->
   	<select id="getBoard" parameterType="board" resultType="board">
 		SELECT *
@@ -118,7 +171,7 @@
    	 	ORDER BY COMMENT_ID
    	 </select>
 
-	<!-- 지식게시판 - 댓글쓴 거 가져오기 -->
+	<!-- 지식게시판 - 댓글 방금 댓글 쓴 거 가져오기 -->
 	 <select id="getWriteComment" parameterType="know_Comment" resultType="know_Comment">
 	 	SELECT * 
    	 	FROM commentWrite_KnowBoard
@@ -164,6 +217,57 @@
   			WHERE boardNumber = #{boardNumber}
   			AND seq = #{seq}
 	</select>
-
 	
+	<!-- 북마크 체크 -->
+	<select id="checkBookmark" parameterType="bookmark" resultType="bookmark">
+  		SELECT *
+  		FROM BOOKMARK
+  		WHERE seq = #{seq}
+	</select>
+	
+	<!-- 북마크 목록 가져오기 -->
+	<select id="getBookmark" parameterType="bookmark" resultType="bookmark">
+  		SELECT *
+  		FROM BOOKMARK
+		ORDER BY bookmark_seq DESC
+	</select>
+
+	<!-- 임시저장하기 -->
+	<select id="saveTempPost" parameterType="saveTemp" resultType="saveTemp">
+		<if test="board_num == 1"> <!-- 지식게시판 -->
+			INSERT INTO saveTemp (BOARD_NUM , SEQ, TITLE, WRITER, CONTENT, POSTINGDATE, SUBJECT, PICTURE)
+			VALUES ( #{board_num}, TB_SAVETEMP_SEQ.NEXTVAL , #{title}, 'writer', #{content}, sysdate, #{subject}, 'picture')
+		</if>
+		<if test="board_num == 2">  <!-- 스터디게시판 -->
+			INSERT INTO saveTemp (BOARD_NUM, SEQ, RECRUITMENT, TITLE, WRITER, CONTENT, POSTINGDATE, TOPIC, WAY, LANGUAGE , PEOPLENUM, PICTURE)
+			VALUES (  #{board_num}, TB_SAVETEMP_SEQ.NEXTVAL , #{recruitment, jdbcType=VARCHAR} , #{title}, 'writer', #{content}, sysdate, #{topic, jdbcType=VARCHAR}, #{way , jdbcType=VARCHAR}, #{language, jdbcType=VARCHAR} , #{peopleNum, jdbcType=VARCHAR}, 'picture' )
+		</if>
+	</select>
+
+	<!-- 임시저장 목록 가져오기 -->
+	<select id="getTempList" parameterType="saveTemp" resultType="saveTemp">
+  		SELECT *
+  		FROM saveTemp
+  		<if test="board_num == 1"> <!-- 지식게시판 -->
+  			WHERE BOARD_NUM = 1
+  		</if>
+  		<if test="board_num == 2"> <!-- 스터디게시판 -->
+  			WHERE BOARD_NUM = 2
+  		</if>
+		ORDER BY SEQ DESC
+	</select>
+	
+	<!-- 임시저장 목록 갯수 세기 -->
+	<select id="countTempPost" parameterType="saveTemp" resultType="int">
+  		SELECT count(*)
+  		FROM saveTemp
+  		<if test="board_num == 1"> <!-- 지식게시판 -->
+  			WHERE BOARD_NUM = 1
+  		</if>
+  		<if test="board_num == 2"> <!-- 스터디게시판 -->
+  			WHERE BOARD_NUM = 2
+  		</if>
+		ORDER BY SEQ DESC
+	</select>
+
   </mapper>
